@@ -1,0 +1,38 @@
+XKB-SWITCH 
+by J. Bromley, S. Mironov
+
+* Description
+
+xkb-switch is a C++ program that allows to query and change the XKB layout state.
+Most of the code was written by J.Broomley. 
+
+XKeyboard.h    interface for a class that queries and sets XKB state (layouts)
+XKeyboard.cpp  implementation for XKB query/set class
+X11Exception.h C++ exception class
+XKbSwitch.cpp  Main program
+README         this file
+
+The C++ class has no special dependencies on anything outside of
+X-related libraries, so it can be easily used with other software.
+
+* Building
+
+To build the program manually, do the following.
+
+ 1. Unpack the tarball and cd to source directory
+ 2. cmake .
+ 3. make
+ 4. sudo make install
+
+
+* Bugs or Problems
+
+J.Broomley:
+If you find any bugs please let me know at
+jbromley@gmail.com. Admittedly, I only really tested with a few
+different layouts that I used, so if you've got some odd layout or set
+of layouts there may be problems. Please let me know.
+
+Sergey:
+Also you are welcome to write to ierton@gmail.com.
+
