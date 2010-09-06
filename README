@@ -4,7 +4,7 @@ by J. Bromley, S. Mironov
 * Description
 
 xkb-switch is a C++ program that allows to query and change the XKB layout state.
-Most of the code was written by J.Broomley. 
+Originally ruby-based code written by J.Broomley.
 
 XKeyboard.h    interface for a class that queries and sets XKB state (layouts)
 XKeyboard.cpp  implementation for XKB query/set class
@@ -27,12 +27,10 @@ To build the program manually, do the following.
 
 * Bugs or Problems
 
-J.Broomley:
 If you find any bugs please let me know at
-jbromley@gmail.com. Admittedly, I only really tested with a few
+ierton@gmail.com. Admittedly, I only tested with a few
 different layouts that I used, so if you've got some odd layout or set
 of layouts there may be problems. Please let me know.
 
-Sergey:
-Also you are welcome to write to ierton@gmail.com.
+Sergey.
 
