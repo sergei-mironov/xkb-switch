@@ -15,51 +15,39 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <X11/Xlib.h>
+#include <X11/XKBlib.h>
 
 
 typedef std::vector<std::string> StringVector;
 
 
-// XKeyboard -----------------------------------------------------------
+#define CHECK_MSG(x,msg) do{ \
+		if(!(x)) { \
+			std::ostringstream oss; \
+			oss << __FILE__ << ":" << __LINE__ << ": Condition " << #x << " failed. " << msg; \
+			throw oss.str(); \
+		} \
+	} while(0)
+
+#define CHECK(x) CHECK_MSG(x,"")
+
 
 class XKeyboard
 {
 public:
     XKeyboard();
     ~XKeyboard();
-    int groupCount() const;
-    StringVector groupNames() const;
-    StringVector groupSymbols() const;
-    int currentGroupNum() const;
-    std::string currentGroupName() const;
-    std::string currentGroupSymbol() const;
-    bool setGroupByNum(int groupNum);
-    bool changeGroup(int increment);
-
-    //friend std::ostream& operator<<(std::ostream& os, const XKeyboard& xkb);
-
-private:
-    Bool initializeXkb();
-    std::string getSymbolNameByResNum(int groupResNum);
-    int groupNumResToXkb(int groupNumRes);
-    std::string getGroupNameByResNum(int groupResNum);
-    int groupLookup(int srcValue, StringVector fromText, StringVector toText, int count);
-    void accomodateGroupXkb();
+    int getCurrentGroupNum() const;
+    void setGroupByNum(int groupNum);
+    StringVector getSymNames();
 
     Display* _display;
-    int _groupCount;
-    StringVector _groupNames;
-    StringVector _symbolNames;
-    int _currentGroupNum;
-
     int _deviceId;
-    int _baseEventCode;
-    int _baseErrorCode;
+    XkbDescRec* _kbdDescPtr;
 };
 
-
-// XkbSymbolParser -----------------------------------------------------
 
 class XkbSymbolParser
 {
@@ -72,16 +60,8 @@ public:
 	
 private:
     bool isXkbLayoutSymbol(const std::string& symbol);
-
     StringVector _nonSymbols;
 };
-
-
-// Helper functions ----------------------------------------------------
-
-int compareNoCase(const std::string& s1, const std::string& s2);
-// std::ostream& operator<<(std::ostream& os, const XKeyboard& xkb);
-// std::ostream& operator<<(std::ostream& os, const StringVector& v);
 
 #endif // XKEYBOARD_H_1C79861A_49B3_4A95_88D6_455C22FEB222
 
