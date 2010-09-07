@@ -109,6 +109,7 @@ XkbSymbolParser::XkbSymbolParser()
     _nonSymbols.push_back("group");
     _nonSymbols.push_back("inet");
     _nonSymbols.push_back("pc");
+    _nonSymbols.push_back("ctrl");
 }
 
 XkbSymbolParser::~XkbSymbolParser()
