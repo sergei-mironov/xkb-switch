@@ -138,7 +138,7 @@ void XkbSymbolParser::parse(const std::string& symbols, StringVector& symbolList
             curSymbol.append(1, ch);
         } else {
             if (inSymbol) {
-                if (isXkbLayoutSymbol(curSymbol)) {
+                if (isXkbLayoutSymbol(curSymbol) && ch != '(') {
                     symbolList.push_back(curSymbol);
                 }
                 curSymbol.clear();
