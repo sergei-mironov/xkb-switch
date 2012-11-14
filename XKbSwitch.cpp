@@ -42,6 +42,7 @@ void usage()
 	cerr << "       xkb-switch -v|--version      Shows version number" << endl;
 	cerr << "       xkb-switch -w|--wait [-p]    Waits for group change and exits" << endl;
 	cerr << "       xkb-switch -W                Infinitely waits for group change" << endl;
+	cerr << "       xkb-switch -n|--next         Switch to the next layout group" << endl;
 	cerr << "       xkb-switch [-p]              Displays current layout group" << endl;
 }
 
@@ -53,6 +54,7 @@ int main( int argc, char* argv[] )
 		int m_wait = 0;
 		int m_lwait = 0;
 		int m_print = 0;
+		int m_next = 0;
 		int m_list = 0;
 		string newgrp;
 
@@ -85,6 +87,10 @@ int main( int argc, char* argv[] )
 				m_print = 1;
 				m_cnt++;
 			}
+			else if(arg == "-n" || arg == "--next") {
+				m_next = 1;
+				m_cnt++;
+			}
 			else if(arg == "-h" || arg == "--help") {
 				usage();
 				return 1;
@@ -94,7 +100,7 @@ int main( int argc, char* argv[] )
 			}
 		}
 
-		if(m_list || m_lwait || !newgrp.empty())
+		if(m_list || m_lwait || !newgrp.empty() || m_next)
 			CHECK_MSG(m_cnt==1, "Invalid flag combination. Try --help.");
 
 		// Default action
@@ -120,6 +126,14 @@ int main( int argc, char* argv[] )
 			if(i==syms.end()) throw string("Group '") + newgrp + 
 				"' is not supported by current layout. Try xkb-switch -l.";
 			xkb.setGroupByNum(i-syms.begin());
+		}
+
+		if (m_next) {
+			if (syms.empty()) throw string("No layout groups configured");
+			const string nextgrp = syms.at(xkb.getCurrentGroupNum());
+			StringVector::iterator i = find(syms.begin(), syms.end(), nextgrp);
+			if (++i == syms.end()) i = syms.begin();
+			xkb.setGroupByNum(i - syms.begin());
 		}
 
 		if(m_print) {
