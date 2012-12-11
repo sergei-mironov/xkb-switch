@@ -111,6 +111,9 @@ XkbSymbolParser::XkbSymbolParser()
     _nonSymbols.push_back("ctr");
     _nonSymbols.push_back("pc");
     _nonSymbols.push_back("ctrl");
+    _nonSymbols.push_back("capslock");
+    _nonSymbols.push_back("compose");
+    _nonSymbols.push_back("terminate");
 }
 
 XkbSymbolParser::~XkbSymbolParser()
