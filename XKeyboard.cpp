@@ -129,24 +129,23 @@ void XkbSymbolParser::parse(const std::string& symbols, StringVector& symbolList
     for (int i = 0; i < symbols.size(); i++) {
         char ch = symbols[i];
         if (ch == '+') {
-            if (inSymbol) {
-                if (isXkbLayoutSymbol(curSymbol)) {
-                    symbolList.push_back(curSymbol);
-                }
-                curSymbol.clear();
-            } else {
-                inSymbol = true;
+            if (inSymbol && !curSymbol.empty() && isXkbLayoutSymbol(curSymbol)) {
+                symbolList.push_back(curSymbol);
             }
-        } else if (inSymbol && (isalpha(static_cast<int>(ch)) || ch == '_')) {
+            inSymbol = true;
+            curSymbol.clear();
+        }
+        else if (inSymbol && ch == '(') {
+            inSymbol = false;
+        }
+        else if (inSymbol && (isalpha(static_cast<int>(ch)) || ch == '_')) {
             curSymbol.append(1, ch);
-        } else {
-            if (inSymbol) {
-                if (isXkbLayoutSymbol(curSymbol)) {
-                    symbolList.push_back(curSymbol);
-                }
-                curSymbol.clear();
-                inSymbol = false;
+        }
+        else {
+            if (inSymbol && !curSymbol.empty() && isXkbLayoutSymbol(curSymbol)) {
+                symbolList.push_back(curSymbol);
             }
+            inSymbol = false;
         }
     }
 
