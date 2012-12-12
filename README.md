@@ -16,10 +16,10 @@ Building
 
 To build the program manually, do the following.
 
- 1. Unpack the tarball and cd to source directory
- 2. cmake .
- 3. make
- 4. sudo make install
+1. Unpack the tarball and cd to source directory
+2. cmake .
+3. make
+4. sudo make install
 
 Usage
 -----
