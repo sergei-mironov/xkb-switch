@@ -1,8 +1,6 @@
-**XKB-SWITCH** 
-by J. Bromley, S. Mironov
-
-Description
+XKB-SWITCH 
 ===========
+by J. Bromley, S. Mironov
 
 xkb-switch is a C++ program that allows to query and change the XKB layout state.
 Originally ruby-based code written by J.Broomley.
@@ -14,7 +12,7 @@ The C++ class has no special dependencies on anything outside of
 X-related libraries, so it can be easily used with other software.
 
 Building
-========
+--------
 
 To build the program manually, do the following.
 
@@ -24,7 +22,7 @@ To build the program manually, do the following.
  4. sudo make install
 
 Usage
-=====
+-----
 	
 	$ xkb-switch --help
 
@@ -40,7 +38,7 @@ Usage
 
 
 Bugs or Problems
-================
+----------------
 
 If you find any bugs please let me know at
 ierton@gmail.com. Admittedly, I only tested with a few
