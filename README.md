@@ -40,10 +40,8 @@ Usage
 Bugs or Problems
 ----------------
 
-If you find any bugs please let me know at
-ierton@gmail.com. Admittedly, I only tested with a few
-different layouts that I used, so if you've got some odd layout or set
-of layouts there may be problems. Please let me know.
+Admittedly, I only tested with a few different layouts that I used. If you find
+any bugs please let me know at ierton@gmail.com. 
 
 Sergey.
 
