@@ -74,7 +74,13 @@ extern "C"
         if ( i == syms.end() )
            return NULL;
 
-        xkb.setGroupByNum( i - syms.begin() );
+        try
+        {
+            xkb.setGroupByNum( i - syms.begin() );
+        }
+        catch( ... )
+        {
+        }
 
         return NULL;
     }
