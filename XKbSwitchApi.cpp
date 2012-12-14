@@ -57,8 +57,9 @@ extern "C"
         }
         catch( ... )
         {
-            return NULL;
         }
+
+        return NULL;
     }
 
 
