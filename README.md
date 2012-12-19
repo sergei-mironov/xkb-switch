@@ -33,15 +33,18 @@ Usage
 	       xkb-switch -w|--wait [-p]    Waits for group change and exits
 	       xkb-switch -W                Infinitely waits for group change
 	       xkb-switch -n|--next         Switch to the next layout group
+           xkb-switch -x                Print X layout string
 	       xkb-switch [-p]              Displays current layout group
-
-
+	       xkb-switch --test            Run some internal tests
 
 Bugs or Problems
 ----------------
 
 Admittedly, I only tested with a few different layouts that I used. If you find
-any bugs please let me know at ierton@gmail.com. 
+any bugs let me know at Github or ierton@gmail.com. 
+
+Xkb-switch contains some testing facilities, please include output of
+`xkb-switch -x' command in the report.
 
 Sergey.
 
