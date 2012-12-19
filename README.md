@@ -23,7 +23,7 @@ To build the program manually, do the following.
 
 Usage
 -----
-	
+
 	$ xkb-switch --help
 
 	Usage: xkb-switch -s ARG            Sets current layout group to ARG
@@ -36,6 +36,12 @@ Usage
            xkb-switch -x                Print X layout string
 	       xkb-switch [-p]              Displays current layout group
 	       xkb-switch --test            Run some internal tests
+
+VIM integration
+---------------
+
+Xkb-switch now contains a library libxkbswitch.so which can be called from
+within Vim scripts. See this [article in Russian](http://lin-techdet.blogspot.ru/2012/12/vim-xkb-switch-libcall.html) for details. Thanks to lyokha for contribution.
 
 Bugs or Problems
 ----------------
