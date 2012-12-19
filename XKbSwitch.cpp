@@ -19,19 +19,7 @@
 #define XKB_SWITCH_VERSION "1.1"
 
 using namespace std;
-
-void xkb_wait_event(XKeyboard &xkb)
-{
-	CHECK(xkb._display != 0);
-
-	Bool bret = XkbSelectEventDetails(xkb._display, XkbUseCoreKbd, 
-		XkbStateNotify, XkbAllStateComponentsMask, XkbGroupStateMask);
-	CHECK_MSG(bret==True, "XkbSelectEventDetails failed");
-
-	XEvent event;
-	int iret = XNextEvent(xkb._display, &event);
-	CHECK_MSG(iret==0, "XNextEvent failed with " << iret);
-}
+using namespace kb;
 
 
 void usage()
@@ -43,11 +31,61 @@ void usage()
 	cerr << "       xkb-switch -w|--wait [-p]    Waits for group change and exits" << endl;
 	cerr << "       xkb-switch -W                Infinitely waits for group change" << endl;
 	cerr << "       xkb-switch -n|--next         Switch to the next layout group" << endl;
+	cerr << "       xkb-switch -x                Print X layout string" << endl;
 	cerr << "       xkb-switch [-p]              Displays current layout group" << endl;
+	cerr << "       xkb-switch --test            Run some internal tests" << endl;
+}
+
+string_vector (*parse)(const std::string&, const string_vector&) = parse2;
+
+string print_layouts(const string_vector& sv)
+{
+	ostringstream oss;
+	bool fst = true;
+
+	oss << "[";
+	for(string_vector::const_iterator i=sv.begin(); i!=sv.end(); i++) {
+		if(!fst) oss << " ";
+		oss << *i;
+		fst = false;
+	}
+	oss << "]";
+	return oss.str();
+}
+
+int run_tests()
+{
+	string kbs;
+	string_vector sv;
+
+	try {
+		kbs = "us+sk(qwerty):2+at:3+us(alt-intl):4+inet(evdev)+compose(ralt)";
+		sv = parse(kbs, nonsyms());
+		CHECK(sv.at(0) == "us");
+		CHECK(sv.at(1) == "sk(qwerty)");
+		CHECK(sv.at(2) == "at");
+		CHECK(sv.at(3) == "us(alt-intl)");
+		cout << kbs << " " << print_layouts(sv) << endl;
+
+		kbs = "pc+us+ru:2+inet(evdev)+group(alt_space_toggle)+ctrl(nocaps)+ctrl(swapcaps)+eurosign(e)";
+		sv = parse(kbs, nonsyms());
+		CHECK(sv.at(0) == "us");
+		CHECK(sv.at(1) == "ru");
+		cout << kbs << " " << print_layouts(sv) << endl;
+		return 0;
+	}
+	catch (exception & e) {
+		cerr << "xkb-switch: test failed: " << e.what() << endl;
+		cerr << "xkb-switch: kbs: " << kbs << endl;
+		cerr << "xkb-switch: layouts: " << print_layouts(sv) << endl;
+		return 1;
+	}
 }
 
 int main( int argc, char* argv[] ) 
 {
+	string_vector syms;
+
 	using namespace std;
 	try {
 		int m_cnt = 0;
@@ -56,6 +94,8 @@ int main( int argc, char* argv[] )
 		int m_print = 0;
 		int m_next = 0;
 		int m_list = 0;
+		int m_x = 0;
+		int m_test = 0;
 		string newgrp;
 
 		XKeyboard xkb;
@@ -91,6 +131,14 @@ int main( int argc, char* argv[] )
 				m_next = 1;
 				m_cnt++;
 			}
+			else if(arg == "-x") {
+				m_x = 1;
+				m_cnt++;
+			}
+			else if(arg == "--test") {
+				m_test = 1;
+				m_cnt++;
+			}
 			else if(arg == "-h" || arg == "--help") {
 				usage();
 				return 1;
@@ -107,37 +155,45 @@ int main( int argc, char* argv[] )
 		if(m_cnt==0) 
 			m_print = 1;
 
+		if(m_test) {
+			return run_tests();
+		}
+
 		if(m_wait) {
-			xkb_wait_event(xkb);
+			xkb.wait_event();
 		}
 
 		if(m_lwait) {
 			while(true) {
-				xkb_wait_event(xkb);
-				StringVector syms = xkb.getSymNames();
-				cout << syms.at(xkb.getCurrentGroupNum()) << endl;
+				xkb.wait_event();
+				syms = parse(xkb.get_kb_string(), nonsyms());
+				cout << syms.at(xkb.get_group()) << endl;
 			}
 		}
 
-		StringVector syms = xkb.getSymNames();
-
-		if(!newgrp.empty()) {
-			StringVector::iterator i = find(syms.begin(), syms.end(), newgrp);
-			if(i==syms.end()) throw string("Group '") + newgrp + 
-				"' is not supported by current layout. Try xkb-switch -l.";
-			xkb.setGroupByNum(i-syms.begin());
+		string kbs = xkb.get_kb_string();
+		if (m_x) {
+			cout << kbs << endl;
 		}
 
+		syms = parse(kbs, nonsyms());
+
 		if (m_next) {
-			if (syms.empty()) throw string("No layout groups configured");
-			const string nextgrp = syms.at(xkb.getCurrentGroupNum());
-			StringVector::iterator i = find(syms.begin(), syms.end(), nextgrp);
+			CHECK_MSG(!syms.empty(), "No layout groups configured");
+			const string nextgrp = syms.at(xkb.get_group());
+			string_vector::iterator i = find(syms.begin(), syms.end(), nextgrp);
 			if (++i == syms.end()) i = syms.begin();
-			xkb.setGroupByNum(i - syms.begin());
+			xkb.set_group(i - syms.begin());
+		}
+		else if(!newgrp.empty()) {
+			string_vector::iterator i = find(syms.begin(), syms.end(), newgrp);
+			CHECK_MSG(i!=syms.end(),
+				"Group " << newgrp << "' is not supported by current layout. Try xkb-switch -l.");
+			xkb.set_group(i-syms.begin());
 		}
 
 		if(m_print) {
-			cout << syms.at(xkb.getCurrentGroupNum()) << endl;
+			cout << syms.at(xkb.get_group()) << endl;
 		}
 
 		if(m_list) {
@@ -147,12 +203,18 @@ int main( int argc, char* argv[] )
 		}
 		return 0;
 	}
-	catch(X11Exception &e) {
-		cerr << "xkb-switch: " << e.what() << endl;
+	catch(X11Exception &err) {
+		cerr << "xkb-switch: " << err.what() << endl;
+		cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
 		return 2;
 	}
 	catch(std::string & err) {
 		cerr << "xkb-switch: " << err << endl;
+		cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
 		return 2;
+	}
+	catch(std::exception & err) {
+		cerr << "xkb-switch: bug: " << err.what() << endl;
+		cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
 	}
 }

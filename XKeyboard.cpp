@@ -6,8 +6,6 @@
 // under the terms of the GNU General Public License as published by the Free
 // Software Foundation; either version 2 of the License, or (at your option)
 // any later version.
-//
-// $Id: XKeyboard.cpp 53 2008-07-18 08:38:47Z jay $
 
 #include "XKeyboard.h"
 #include "X11Exception.h"
@@ -16,7 +14,7 @@
 #include <cctype>
 #include <cstring>
 
-// XKeyboard -----------------------------------------------------------
+namespace kb {
 
 XKeyboard::XKeyboard()
     : _display(0), _deviceId(XkbUseCoreKbd)
@@ -28,7 +26,7 @@ XKeyboard::XKeyboard()
     int eventCode;
     int errorReturn;
     int major = XkbMajorVersion;
-    int minor = XkbMinorVersion;;
+    int minor = XkbMinorVersion;
     int reasonReturn;
     _display = XkbOpenDisplay(displayName, &eventCode, &errorReturn, &major,
                               &minor, &reasonReturn);
@@ -69,7 +67,7 @@ XKeyboard::~XKeyboard()
     XCloseDisplay(_display);
 }
 
-StringVector XKeyboard::getSymNames()
+std::string XKeyboard::get_kb_string()
 {
     XkbGetControls(_display, XkbAllControlsMask, _kbdDescPtr);
     XkbGetNames(_display, XkbSymbolsNameMask, _kbdDescPtr);
@@ -77,85 +75,150 @@ StringVector XKeyboard::getSymNames()
     Atom symNameAtom = _kbdDescPtr->names->symbols;
     CHECK(symNameAtom != None);
 
-    char* symNameC = XGetAtomName(_display, symNameAtom);
-    std::string symName(symNameC);
-    XFree(symNameC);
+    char* kbsC = XGetAtomName(_display, symNameAtom);
+    std::string kbs(kbsC);
+    XFree(kbsC);
 
-    CHECK(!symName.empty());
+    CHECK(!kbs.empty());
+	return kbs;
 
-    StringVector symNames;
-    XkbSymbolParser symParser;
-    symParser.parse(symName, symNames);
-    return symNames;
+/*     StringVector symNames; */
+/*     XkbSymbolParser symParser; */
+/*     symParser.parse(symName, symNames); */
+/*     return symNames; */
 }
 
-void XKeyboard::setGroupByNum(int groupNum)
+void XKeyboard::wait_event()
+{
+	CHECK(_display != 0);
+
+	Bool bret = XkbSelectEventDetails(_display, XkbUseCoreKbd, 
+		XkbStateNotify, XkbAllStateComponentsMask, XkbGroupStateMask);
+	CHECK_MSG(bret==True, "XkbSelectEventDetails failed");
+
+	XEvent event;
+	int iret = XNextEvent(_display, &event);
+	CHECK_MSG(iret==0, "XNextEvent failed with " << iret);
+}
+
+void XKeyboard::set_group(int groupNum)
 {
     Bool result = XkbLockGroup(_display, _deviceId, groupNum);
     CHECK(result == True);
 }
 
-int XKeyboard::getCurrentGroupNum() const
+int XKeyboard::get_group() const
 {
     XkbStateRec xkbState;
     XkbGetState(_display, _deviceId, &xkbState);
     return static_cast<int>(xkbState.group);
 }
 
-// XkbSymbolParser -----------------------------------------------------
-
-XkbSymbolParser::XkbSymbolParser()
+// returns true if symbol is ok
+bool filter(const string_vector& nonsyms, const std::string& symbol)
 {
-    _nonSymbols.push_back("group");
-    _nonSymbols.push_back("inet");
-    _nonSymbols.push_back("ctr");
-    _nonSymbols.push_back("pc");
-    _nonSymbols.push_back("ctrl");
-    _nonSymbols.push_back("capslock");
-    _nonSymbols.push_back("compose");
-    _nonSymbols.push_back("terminate");
+	if(symbol.empty()) return false;
+	string_vector::const_iterator r = find(nonsyms.begin(), nonsyms.end(), symbol);
+    return r == nonsyms.end();
 }
 
-XkbSymbolParser::~XkbSymbolParser()
-{
-    _nonSymbols.clear();
-}
-
-void XkbSymbolParser::parse(const std::string& symbols, StringVector& symbolList)
+string_vector parse1(const std::string& symbols, const string_vector& nonsyms)
 {
     bool inSymbol = false;
-    std::string curSymbol;
+	std::string sym;
+	string_vector symlist;
 
     for (int i = 0; i < symbols.size(); i++) {
         char ch = symbols[i];
         if (ch == '+') {
-            if (inSymbol && !curSymbol.empty() && isXkbLayoutSymbol(curSymbol)) {
-                symbolList.push_back(curSymbol);
+            if (inSymbol && !sym.empty() && filter(nonsyms, sym)) {
+                symlist.push_back(sym);
             }
             inSymbol = true;
-            curSymbol.clear();
+            sym.clear();
         }
         else if (inSymbol && ch == '(') {
             inSymbol = false;
         }
         else if (inSymbol && (isalpha(static_cast<int>(ch)) || ch == '_')) {
-            curSymbol.append(1, ch);
+            sym.append(1, ch);
         }
         else {
-            if (inSymbol && !curSymbol.empty() && isXkbLayoutSymbol(curSymbol)) {
-                symbolList.push_back(curSymbol);
+            if (inSymbol && !sym.empty() && filter(nonsyms, sym)) {
+                symlist.push_back(sym);
             }
             inSymbol = false;
         }
     }
 
-    if (inSymbol && !curSymbol.empty() && isXkbLayoutSymbol(curSymbol)) {
-        symbolList.push_back(curSymbol);
+    if (inSymbol && !sym.empty() && filter(nonsyms, sym)) {
+        symlist.push_back(sym);
     }
+
+	return symlist;
 }
 
-bool XkbSymbolParser::isXkbLayoutSymbol(const std::string& symbol) {
-    StringVectorIter result = find(_nonSymbols.begin(), _nonSymbols.end(), symbol);
-    return result == _nonSymbols.end();
+void safe_push_back(string_vector& v, std::string s, std::string note)
+{
+	if(s.empty()) return;
+	if(!note.empty()) {
+		s += "(" + note + ")";
+	}
+	v.push_back(s);
+}
+
+bool goodchar(char ch)
+{
+	return (isalpha(static_cast<int>(ch)) || ch == '_' || ch == '-');
+}
+
+string_vector parse2(const std::string& symbols, const string_vector& nonsyms)
+{
+    enum{ok,skip,broken} state = ok;
+	int paren = 0;
+	std::string sym;
+	// Words between optional '(' ')'
+	std::string note;
+	string_vector symlist;
+
+    for (int i = 0; i < symbols.size(); i++) {
+        char ch = symbols[i];
+
+        if (ch == '+') {
+            if (state != broken && paren == 0 && filter(nonsyms, sym)) {
+                safe_push_back(symlist, sym, note);
+            }
+            state = ok;
+			paren = 0;
+            sym.clear();
+			note.clear();
+        }
+        else if (state == ok && ch == '(') {
+            paren++;
+        }
+        else if (state == ok && ch == ')') {
+            paren--;
+        }
+        else if (state == ok && ch == ':') {
+			state = skip;
+        }
+        else if (state == ok && goodchar(ch)) {
+			if (paren == 0)
+				sym.append(1, ch);
+			else
+				note.append(1, ch);
+        }
+        else if(state == ok) {
+			state = broken;
+        }
+    }
+
+    if (state != broken && paren == 0 && filter(nonsyms, sym)) {
+        safe_push_back(symlist, sym, note);
+    }
+
+	return symlist;
+}
+
 }
 

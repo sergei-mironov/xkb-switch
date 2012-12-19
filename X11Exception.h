@@ -1,13 +1,22 @@
 // X11Exception.h
 // C++ exception that wraps X11 errors.
 // Copyright (C) 2008 Jay Bromley <jbromley@gmail.com>
-// 
-// $Id: X11Exception.h 26 2008-04-09 08:47:11Z jay $
 
-#ifndef X11EXCEPTION_H_FE39A315_6827_447B_AE62_5FA2C3FD391F
-#define X11EXCEPTION_H_FE39A315_6827_447B_AE62_5FA2C3FD391F
+#ifndef X11EXCEPTION
+#define X11EXCEPTION
 
 #include <exception>
+#include <stdexcept>
+
+#define CHECK_MSG(x,msg) do{ \
+		if(!(x)) { \
+			std::ostringstream oss; \
+			oss << __FILE__ << ":" << __LINE__ << ": Condition " << #x << " failed. " << msg; \
+			throw std::runtime_error(oss.str()); \
+		} \
+	} while(0)
+
+#define CHECK(x) CHECK_MSG(x,"")
 
 class X11Exception : public std::exception
 {
@@ -21,9 +30,4 @@ private:
     std::string _reason;
 };
 
-#endif // GAMEEXCEPTION_H_FE39A315_6827_447B_AE62_5FA2C3FD391F
-
-// Local Variables:
-// mode: c++
-// End:
-
+#endif

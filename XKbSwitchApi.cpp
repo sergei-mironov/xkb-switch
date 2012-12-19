@@ -4,15 +4,14 @@
 #include "XKeyboard.h"
 
 using namespace std;
-
+using namespace kb;
 
 namespace
 {
     XKeyboard     xkb;
-    StringVector  symNames;
+    string_vector  symNames;
 
-
-    StringVector &  getSymNames( void )
+    string_vector &  getSymNames( void )
     {
         static bool  loaded = false;
 
@@ -20,7 +19,6 @@ namespace
             return symNames;
 
         loaded = true;
-
         XkbGetControls( xkb._display, XkbAllControlsMask, xkb._kbdDescPtr );
         XkbGetNames( xkb._display, XkbSymbolsNameMask, xkb._kbdDescPtr );
 
@@ -36,9 +34,7 @@ namespace
         if ( symName.empty() )
             return symNames;
 
-        XkbSymbolParser  symParser;
-
-        symParser.parse( symName, symNames );
+        symNames = parse2( symName, nonsyms() );
 
         return symNames;
     }
@@ -49,11 +45,11 @@ extern "C"
 {
     const char *  Xkb_Switch_getXkbLayout( const char *  /* unused */ )
     {
-        StringVector &  syms = getSymNames();
+        string_vector & syms = getSymNames();
 
         try
         {
-            return syms.at( xkb.getCurrentGroupNum() ).c_str();
+            return syms.at( xkb.get_group() ).c_str();
         }
         catch( ... )
         {
@@ -65,19 +61,19 @@ extern "C"
 
     const char *  Xkb_Switch_setXkbLayout( const char *  newgrp )
     {
-        StringVector &  syms = getSymNames();
+        string_vector &  syms = getSymNames();
 
         if ( newgrp == NULL || newgrp[ 0 ] == '\0' )
             return NULL;
 
-        StringVector::iterator  i = find( syms.begin(), syms.end(), newgrp );
+        string_vector::iterator  i = find( syms.begin(), syms.end(), newgrp );
 
         if ( i == syms.end() )
            return NULL;
 
         try
         {
-            xkb.setGroupByNum( i - syms.begin() );
+            xkb.set_group( i - syms.begin() );
         }
         catch( ... )
         {
