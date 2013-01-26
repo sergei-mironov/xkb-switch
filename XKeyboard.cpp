@@ -169,7 +169,7 @@ void safe_push_back(string_vector& v, std::string s, std::string note)
 
 bool goodchar(char ch)
 {
-	return (isalpha(static_cast<int>(ch)) || ch == '_' || ch == '-');
+	return (isdigit(ch) || isalpha(static_cast<int>(ch)) || ch == '_' || ch == '-');
 }
 
 string_vector parse2(const std::string& symbols, const string_vector& nonsyms)

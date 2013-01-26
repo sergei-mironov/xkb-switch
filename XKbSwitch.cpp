@@ -59,6 +59,14 @@ int run_tests()
 	string_vector sv;
 
 	try {
+		kbs = "us+sk1(qwerty1):2+at:3+us(alt-intl):4+inet(evdev)+compose(ralt)";
+		sv = parse(kbs, nonsyms());
+		CHECK(sv.at(0) == "us");
+		CHECK(sv.at(1) == "sk1(qwerty1)");
+		CHECK(sv.at(2) == "at");
+		CHECK(sv.at(3) == "us(alt-intl)");
+		cout << kbs << " " << print_layouts(sv) << endl;
+
 		kbs = "us+sk(qwerty):2+at:3+us(alt-intl):4+inet(evdev)+compose(ralt)";
 		sv = parse(kbs, nonsyms());
 		CHECK(sv.at(0) == "us");
