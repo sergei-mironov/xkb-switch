@@ -43,6 +43,22 @@ VIM integration
 Xkb-switch now contains a library libxkbswitch.so which can be called from
 within Vim scripts. See this [article in Russian](http://lin-techdet.blogspot.ru/2012/12/vim-xkb-switch-libcall.html) for details. Thanks to lyokha for contribution.
 
+Layout groups
+-------------
+
+xkb-group.sh can help you to manage layout groups. Just run it and send some input at it's stdin every time you want to trigger layouts from primary to secondary and back. For example:
+
+	$ xkb-group.sh us ru
+	switch # switch from us to ru or from current layout to us
+	switch # switch from ru to us or from us to ru
+
+	(from other terminal)
+	$ xkb-switch -s de # switch to 'de' layout, change secondary layout to 'de'
+	
+	(back to terminal running xkb-group.sh)
+	switch # switch from de to us
+	switch # switch from us to de
+	
 Bugs or Problems
 ----------------
 
