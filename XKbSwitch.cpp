@@ -222,7 +222,7 @@ int main( int argc, char* argv[] )
 		return 2;
 	}
 	catch(std::exception & err) {
-		cerr << "xkb-switch: bug: " << err.what() << endl;
+		cerr << "xkb-switch: " << err.what() << endl;
 		cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
 	}
 }

@@ -24,18 +24,18 @@ typedef std::vector<std::string> string_vector;
 class XKeyboard
 {
 public:
-    Display* _display;
-    int _deviceId;
-    XkbDescRec* _kbdDescPtr;
+	Display* _display;
+	int _deviceId;
+	XkbDescRec* _kbdDescPtr;
 
-    XKeyboard();
-    ~XKeyboard();
+	XKeyboard();
+	~XKeyboard();
 
 	// Gets the current layout
-    int get_group() const;
+	int get_group() const;
 
 	// Sets the layout
-    void set_group(int num);
+	void set_group(int num);
 
 	// Returns keyboard layout string
 	std::string get_kb_string();
