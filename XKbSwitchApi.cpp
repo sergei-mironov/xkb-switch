@@ -46,7 +46,6 @@ namespace
 
     }  xkb;
 
-    //XKeyboard     xkb;
     string_vector  symNames;
 
     string_vector &  getSymNames( void )
