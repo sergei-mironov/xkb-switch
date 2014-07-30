@@ -117,9 +117,19 @@ int XKeyboard::get_group() const
 // returns true if symbol is ok
 bool filter(const string_vector& nonsyms, const std::string& symbol)
 {
-	if(symbol.empty()) return false;
+	if(symbol.empty())
+    return false;
+
+  // Filter out all prohibited words
 	string_vector::const_iterator r = find(nonsyms.begin(), nonsyms.end(), symbol);
-	return r == nonsyms.end();
+	if(r != nonsyms.end())
+    return false;
+
+  // Filter out all numbers groups started with number
+  if(isdigit(symbol[0]))
+    return false;
+
+  return true;
 }
 
 string_vector parse1(const std::string& symbols, const string_vector& nonsyms)
@@ -192,6 +202,55 @@ string_vector parse2(const std::string& symbols, const string_vector& nonsyms)
 			paren = 0;
 			sym.clear();
 			note.clear();
+		}
+		else if (state == ok && ch == '(') {
+			paren++;
+		}
+		else if (state == ok && ch == ')') {
+			paren--;
+		}
+		else if (state == ok && ch == ':') {
+			state = skip;
+		}
+		else if (state == ok && goodchar(ch)) {
+			if (paren == 0)
+				sym.append(1, ch);
+			else
+				note.append(1, ch);
+		}
+		else if(state == ok) {
+			state = broken;
+		}
+	}
+
+	if (state != broken && paren == 0 && filter(nonsyms, sym)) {
+		safe_push_back(symlist, sym, note);
+	}
+
+	return symlist;
+}
+
+string_vector parse3(const std::string& symbols, const string_vector& nonsyms)
+{
+	enum{ok,skip,broken} state = ok;
+	int paren = 0;
+	std::string sym;
+	// Words between optional '(' ')'
+	std::string note;
+	string_vector symlist;
+
+	for (int i = 0; i < symbols.size(); i++) {
+		char ch = symbols[i];
+
+		if (ch == '+' || ch == '_') {
+      if(paren == 0) {
+        if (state != broken && paren == 0 && filter(nonsyms, sym)) {
+          safe_push_back(symlist, sym, note);
+        }
+        state = ok;
+        sym.clear();
+        note.clear();
+      }
 		}
 		else if (state == ok && ch == '(') {
 			paren++;

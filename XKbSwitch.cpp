@@ -36,7 +36,7 @@ void usage()
 	cerr << "       xkb-switch --test            Run some internal tests" << endl;
 }
 
-string_vector (*parse)(const std::string&, const string_vector&) = parse2;
+string_vector (*parse)(const std::string&, const string_vector&) = parse3;
 
 string print_layouts(const string_vector& sv)
 {
@@ -76,6 +76,12 @@ int run_tests()
 		cout << kbs << " " << print_layouts(sv) << endl;
 
 		kbs = "pc+us+ru:2+inet(evdev)+group(alt_space_toggle)+ctrl(nocaps)+ctrl(swapcaps)+eurosign(e)";
+		sv = parse(kbs, nonsyms());
+		CHECK(sv.at(0) == "us");
+		CHECK(sv.at(1) == "ru");
+		cout << kbs << " " << print_layouts(sv) << endl;
+
+		kbs = "pc_us_ru_2_inet(evdev)_group(switch)_group(alt_shift_toggle)_compose(rwin)_terminate(ctrl_alt_bksp)";
 		sv = parse(kbs, nonsyms());
 		CHECK(sv.at(0) == "us");
 		CHECK(sv.at(1) == "ru");

@@ -48,6 +48,7 @@ public:
 // normally the result of nonsyms()
 string_vector parse1(const std::string& symbols, const string_vector& ns);
 string_vector parse2(const std::string& symbols, const string_vector& ns);
+string_vector parse3(const std::string& symbols, const string_vector& ns);
 
 // Symbols to be ignored by the parser
 inline string_vector nonsyms()
