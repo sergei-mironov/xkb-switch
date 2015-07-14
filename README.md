@@ -1,12 +1,13 @@
 XKB-SWITCH 
 ===========
-by J. Bromley, S. Mironov
+by J. Bromley, S. Mironov, Alexei Rad'kov
 
 xkb-switch is a C++ program that allows to query and change the XKB layout state.
 Originally ruby-based code written by J.Broomley.
 
 * XKeyboard.cpp  Implementation for XKB query/set class
 * XKbSwitch.cpp  Main program
+* XKbSwitchApi.cpp The Vim API bindings
 
 The C++ class has no special dependencies on anything outside of
 X-related libraries, so it can be easily used with other software.
@@ -43,12 +44,15 @@ VIM integration
 ---------------
 
 Xkb-switch now contains a library libxkbswitch.so which can be called from
-within Vim scripts. See this [article in Russian](http://lin-techdet.blogspot.ru/2012/12/vim-xkb-switch-libcall.html) for details. Thanks to lyokha for contribution.
+within Vim scripts. See this [article in Russian](http://lin-techdet.blogspot.ru/2012/12/vim-xkb-switch-libcall.html) for
+details. Thanks to lyokha for contribution.
 
 Layout groups
 -------------
 
-xkb-group.sh can help you to manage layout groups. Just run it and send some input at it's stdin every time you want to trigger layouts from primary to secondary and back. For example:
+xkb-group.sh can help you to manage layout groups. Just run it and send some
+input at it's stdin every time you want to trigger layouts from primary to
+secondary and back. For example:
 
 	$ xkb-group.sh us ru
 	switch # switch from us to ru or from current layout to us
