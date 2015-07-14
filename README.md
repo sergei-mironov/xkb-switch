@@ -11,6 +11,8 @@ Originally ruby-based code written by J.Broomley.
 The C++ class has no special dependencies on anything outside of
 X-related libraries, so it can be easily used with other software.
 
+Xkb-switch is licensed under the GNU GPLv3, see COPYING for details.
+
 Building
 --------
 
