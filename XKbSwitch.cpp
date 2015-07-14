@@ -95,6 +95,11 @@ int run_tests()
 		CHECK(sv.at(0) == "us");
 		CHECK(sv.at(1) == "ru");
 		cout << kbs << " " << print_layouts(sv) << endl;
+
+		kbs = "pc+us+inet(evdev)";
+		sv = parse(kbs, nonsyms());
+		CHECK(sv.at(0) == "us");
+		cout << kbs << " " << print_layouts(sv) << endl;
 		return 0;
 	}
 	catch (exception & e) {
