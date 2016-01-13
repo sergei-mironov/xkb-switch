@@ -1,7 +1,11 @@
 
 *Unfortunately, I'm going to stop supporting this project. Please contact me if you need some cosmetic changes in code.*
 
-xkb-switch works by obtaining xkb token string https://github.com/ierton/xkb-switch/blob/master/XKeyboard.cpp#L72 and parsing it with parse3 https://github.com/ierton/xkb-switch/blob/master/XKeyboard.cpp#L235 .I suppose it is not the best way to query X about keyboard layouts and somebody should re-write this part by using better source of information.
+xkb-switch works by obtaining xkb token string https://github.com/ierton/xkb-switch/blob/master/XKeyboard.cpp#L72 and parsing it with `parse3` https://github.com/ierton/xkb-switch/blob/master/XKeyboard.cpp#L235 .I suppose it is not the best way to query X about keyboard layouts and somebody should re-write this part by using better source of information. `parse3` builds the list of layouts names. Positions in this list are used as queries to X for layout changes. So, for example:
+
+    pc+us+ru:2+inet(evdev)+group(alt_space_toggle)+ctrl(nocaps)+ctrl(swapcaps)+eurosign(e) 
+
+will be turned to list, containig ["us","ru"], so 0 or 1 will be passed to X upon user request  https://github.com/ierton/xkb-switch/blob/master/XKbSwitch.cpp#L214
 
 /Sergey/
 
