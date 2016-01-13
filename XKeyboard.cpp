@@ -78,6 +78,7 @@ std::string XKeyboard::get_kb_string()
   CHECK(symNameAtom != None);
 
   char* kbsC = XGetAtomName(_display, symNameAtom);
+  CHECK(kbsC);
   std::string kbs(kbsC);
   XFree(kbsC);
 
@@ -140,7 +141,7 @@ string_vector parse1(const std::string& symbols, const string_vector& nonsyms)
   std::string sym;
   string_vector symlist;
 
-  for (int i = 0; i < symbols.size(); i++) {
+  for (size_t i = 0; i < symbols.size(); i++) {
     char ch = symbols[i];
     if (ch == '+') {
       if (inSymbol && !sym.empty() && filter(nonsyms, sym)) {
@@ -193,7 +194,7 @@ string_vector parse2(const std::string& symbols, const string_vector& nonsyms)
   std::string note;
   string_vector symlist;
 
-  for (int i = 0; i < symbols.size(); i++) {
+  for (size_t i = 0; i < symbols.size(); i++) {
     char ch = symbols[i];
 
     if (ch == '+') {
@@ -241,7 +242,7 @@ string_vector parse3(const std::string& symbols, const string_vector& nonsyms)
   std::string note;
   string_vector symlist;
 
-  for (int i = 0; i < symbols.size(); i++) {
+  for (size_t i = 0; i < symbols.size(); i++) {
     char ch = symbols[i];
 
     if (ch == '+' || ch == '_') {
