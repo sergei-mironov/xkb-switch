@@ -1,5 +1,8 @@
 
 *Unfortunately, I'm going to stop supporting this project. Please contact me if you need some cosmetic changes in code.*
+
+xkb-switch works by obtaining xkb token string https://github.com/ierton/xkb-switch/blob/master/XKeyboard.cpp#L72 and parsing it by parse3 https://github.com/ierton/xkb-switch/blob/master/XKeyboard.cpp#L235 .I suppose it is not the best way to query X about keyboard layouts and somebody should re-write this part by using better source of information.
+
 /Sergey/
 
 
