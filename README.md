@@ -1,3 +1,8 @@
+
+*Unfortunately, I'm going to stop supporting this project. Please contact me if you need some cosmetic changes in code.*
+/Sergey/
+
+
 XKB-SWITCH 
 ===========
 by J. Bromley, S. Mironov, Alexei Rad'kov
