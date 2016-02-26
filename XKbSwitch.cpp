@@ -194,17 +194,15 @@ int main( int argc, char* argv[] )
 		if(m_lwait) {
 			while(true) {
 				xkb.wait_event();
-				syms = parse(xkb.get_kb_string(), nonsyms());
+				xkb.BuildLayout(syms);
 				cout << syms.at(xkb.get_group()) << endl;
 			}
 		}
 
-		string kbs = xkb.get_kb_string();
-		if (m_x) {
-			cout << kbs << endl;
-		}
+		if (m_lwait)
+			syms.clear();
 
-		syms = parse(kbs, nonsyms());
+		xkb.BuildLayout(syms);
 
 		if (m_next) {
 			CHECK_MSG(!syms.empty(), "No layout groups configured");

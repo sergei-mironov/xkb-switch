@@ -29,8 +29,6 @@
 
 #include <iostream>
 #include <string>
-#include <boost/tokenizer.hpp>
-#include <boost/foreach.hpp>
 
 namespace kb {
 
