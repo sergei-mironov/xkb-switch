@@ -44,8 +44,6 @@ void usage()
 	cerr << "       xkb-switch [-p]              Displays current layout group" << endl;
 }
 
-string_vector (*parse)(const std::string&, const string_vector&) = parse3;
-
 string print_layouts(const string_vector& sv)
 {
 	ostringstream oss;
@@ -61,7 +59,7 @@ string print_layouts(const string_vector& sv)
 	return oss.str();
 }
 
-int main( int argc, char* argv[] ) 
+int main( int argc, char* argv[] )
 {
 	string_vector syms;
 
