@@ -40,7 +40,6 @@ void usage()
 	cerr << "       xkb-switch -w|--wait [-p]    Waits for group change and exits" << endl;
 	cerr << "       xkb-switch -W                Infinitely waits for group change" << endl;
 	cerr << "       xkb-switch -n|--next         Switch to the next layout group" << endl;
-	cerr << "       xkb-switch -x                Print X layout string" << endl;
 	cerr << "       xkb-switch [-p]              Displays current layout group" << endl;
 }
 
@@ -71,8 +70,6 @@ int main( int argc, char* argv[] )
 		int m_print = 0;
 		int m_next = 0;
 		int m_list = 0;
-		int m_x = 0;
-		int m_test = 0;
 		string newgrp;
 
 		XKeyboard xkb;
@@ -106,14 +103,6 @@ int main( int argc, char* argv[] )
 			}
 			else if(arg == "-n" || arg == "--next") {
 				m_next = 1;
-				m_cnt++;
-			}
-			else if(arg == "-x") {
-				m_x = 1;
-				m_cnt++;
-			}
-			else if(arg == "--test") {
-				m_test = 1;
 				m_cnt++;
 			}
 			else if(arg == "-h" || arg == "--help") {
