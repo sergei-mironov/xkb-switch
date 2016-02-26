@@ -84,18 +84,21 @@ XKeyboard::~XKeyboard()
 }
 
 
-void XKeyboard::BuildLayout(string_vector& vec) {
+void XKeyboard::BuildLayout(string_vector& vec)
+{
 	XkbRF_VarDefsRec vdr;
 	int i = 0;
-	char str[20] = {0};
+	char str[256] = {0};
 	const char s[2] = ",";
 	char *token;
 	char* tmp = NULL;
 
-  	strcpy(str, (
-    !_display ? NO_KEYBOARD :
-    (XkbRF_GetNamesProp(_display, &tmp, &vdr) && vdr.layout) ?
-    vdr.layout : DFLT_XKB_LAYOUT));
+  	strncpy(str, (
+            !_display ? NO_KEYBOARD :
+            (XkbRF_GetNamesProp(_display, &tmp, &vdr) && vdr.layout) ?
+            vdr.layout : DFLT_XKB_LAYOUT),
+            256);
+        str[255] = 0;
 
 	/* get the first token */
 	token = strtok(str, s);
@@ -114,7 +117,7 @@ void XKeyboard::wait_event()
 {
   CHECK(_display != 0);
 
-  Bool bret = XkbSelectEventDetails(_display, XkbUseCoreKbd, 
+  Bool bret = XkbSelectEventDetails(_display, XkbUseCoreKbd,
       XkbStateNotify, XkbAllStateComponentsMask, XkbGroupStateMask);
   CHECK_MSG(bret==True, "XkbSelectEventDetails failed");
 
