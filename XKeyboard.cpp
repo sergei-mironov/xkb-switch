@@ -15,6 +15,22 @@
 #include <cstdlib>
 #include <cctype>
 #include <cstring>
+#include <X11/XKBlib.h>
+#include "X11/extensions/XKBrules.h"
+
+#ifndef DFLT_XKB_LAYOUT
+#define	DFLT_XKB_LAYOUT "us"
+#endif
+
+#ifndef NO_KEYBOARD
+#define	NO_KEYBOARD "no keyboard"
+#endif
+
+
+#include <iostream>
+#include <string>
+#include <boost/tokenizer.hpp>
+#include <boost/foreach.hpp>
 
 namespace kb {
 
@@ -69,27 +85,32 @@ XKeyboard::~XKeyboard()
   XCloseDisplay(_display);
 }
 
-std::string XKeyboard::get_kb_string()
-{
-  XkbGetControls(_display, XkbAllControlsMask, _kbdDescPtr);
-  XkbGetNames(_display, XkbSymbolsNameMask, _kbdDescPtr);
 
-  Atom symNameAtom = _kbdDescPtr->names->symbols;
-  CHECK(symNameAtom != None);
+void XKeyboard::BuildLayout(string_vector& vec) {
+	XkbRF_VarDefsRec vdr;
+	int i = 0;
+	char str[20] = {0};
+	const char s[2] = ",";
+	char *token;
+	char* tmp = NULL;
 
-  char* kbsC = XGetAtomName(_display, symNameAtom);
-  CHECK(kbsC);
-  std::string kbs(kbsC);
-  XFree(kbsC);
+  	strcpy(str, (
+    !_display ? NO_KEYBOARD :
+    (XkbRF_GetNamesProp(_display, &tmp, &vdr) && vdr.layout) ?
+    vdr.layout : DFLT_XKB_LAYOUT));
 
-  CHECK(!kbs.empty());
-  return kbs;
+	/* get the first token */
+	token = strtok(str, s);
 
-  /*     StringVector symNames; */
-  /*     XkbSymbolParser symParser; */
-  /*     symParser.parse(symName, symNames); */
-  /*     return symNames; */
+	/* walk through other tokens */
+	while( token != NULL )
+	{
+	  vec.push_back(token);
+	  token = strtok(NULL, s);
+	}
 }
+
+
 
 void XKeyboard::wait_event()
 {

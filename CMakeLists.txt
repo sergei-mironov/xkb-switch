@@ -6,7 +6,7 @@ FIND_PROGRAM(CTAGS ctags)
 
 ADD_EXECUTABLE(xkb-switch XKbSwitch.cpp XKeyboard.cpp)
 
-TARGET_LINK_LIBRARIES(xkb-switch X11)
+TARGET_LINK_LIBRARIES(xkb-switch X11 xkbfile)
 
 OPTION(BUILD_XKBSWITCH_LIB
     "Build a library compatible with vim's libcall interface" ON)
