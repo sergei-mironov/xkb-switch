@@ -42,7 +42,6 @@ void usage()
 	cerr << "       xkb-switch -n|--next         Switch to the next layout group" << endl;
 	cerr << "       xkb-switch -x                Print X layout string" << endl;
 	cerr << "       xkb-switch [-p]              Displays current layout group" << endl;
-	cerr << "       xkb-switch --test            Run some internal tests" << endl;
 }
 
 string_vector (*parse)(const std::string&, const string_vector&) = parse3;
@@ -60,54 +59,6 @@ string print_layouts(const string_vector& sv)
 	}
 	oss << "]";
 	return oss.str();
-}
-
-int run_tests()
-{
-	string kbs;
-	string_vector sv;
-
-	try {
-		kbs = "us+sk1(qwerty1):2+at:3+us(alt-intl):4+inet(evdev)+compose(ralt)";
-		sv = parse(kbs, nonsyms());
-		CHECK(sv.at(0) == "us");
-		CHECK(sv.at(1) == "sk1(qwerty1)");
-		CHECK(sv.at(2) == "at");
-		CHECK(sv.at(3) == "us(alt-intl)");
-		cout << kbs << " " << print_layouts(sv) << endl;
-
-		kbs = "us+sk(qwerty):2+at:3+us(alt-intl):4+inet(evdev)+compose(ralt)";
-		sv = parse(kbs, nonsyms());
-		CHECK(sv.at(0) == "us");
-		CHECK(sv.at(1) == "sk(qwerty)");
-		CHECK(sv.at(2) == "at");
-		CHECK(sv.at(3) == "us(alt-intl)");
-		cout << kbs << " " << print_layouts(sv) << endl;
-
-		kbs = "pc+us+ru:2+inet(evdev)+group(alt_space_toggle)+ctrl(nocaps)+ctrl(swapcaps)+eurosign(e)";
-		sv = parse(kbs, nonsyms());
-		CHECK(sv.at(0) == "us");
-		CHECK(sv.at(1) == "ru");
-		cout << kbs << " " << print_layouts(sv) << endl;
-
-		kbs = "pc_us_ru_2_inet(evdev)_group(switch)_group(alt_shift_toggle)_compose(rwin)_terminate(ctrl_alt_bksp)";
-		sv = parse(kbs, nonsyms());
-		CHECK(sv.at(0) == "us");
-		CHECK(sv.at(1) == "ru");
-		cout << kbs << " " << print_layouts(sv) << endl;
-
-		kbs = "pc+us+inet(evdev)";
-		sv = parse(kbs, nonsyms());
-		CHECK(sv.at(0) == "us");
-		cout << kbs << " " << print_layouts(sv) << endl;
-		return 0;
-	}
-	catch (exception & e) {
-		cerr << "xkb-switch: test failed: " << e.what() << endl;
-		cerr << "xkb-switch: kbs: " << kbs << endl;
-		cerr << "xkb-switch: layouts: " << print_layouts(sv) << endl;
-		return 1;
-	}
 }
 
 int main( int argc, char* argv[] ) 
@@ -180,12 +131,8 @@ int main( int argc, char* argv[] )
 			CHECK_MSG(m_cnt==1, "Invalid flag combination. Try --help.");
 
 		// Default action
-		if(m_cnt==0) 
+		if(m_cnt==0)
 			m_print = 1;
-
-		if(m_test) {
-			return run_tests();
-		}
 
 		if(m_wait) {
 			xkb.wait_event();
