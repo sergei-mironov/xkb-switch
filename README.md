@@ -1,6 +1,5 @@
 
-
-XKB-SWITCH 
+XKB-SWITCH
 ===========
 by J. Bromley, S. Mironov, Alexei Rad'kov
 
@@ -62,16 +61,16 @@ secondary and back. For example:
 
 	(from other terminal)
 	$ xkb-switch -s de # switch to 'de' layout, change secondary layout to 'de'
-	
+
 	(back to terminal running xkb-group.sh)
 	switch # switch from de to us
 	switch # switch from us to de
-	
+
 Bugs or Problems
 ----------------
 
 Admittedly, I only tested with a few different layouts that I used. If you find
-any bugs let me know at Github or ierton@gmail.com. 
+any bugs let me know at Github or ierton@gmail.com.
 
 Xkb-switch contains some testing facilities, please include output of
 `xkb-switch -x' command in the report.
