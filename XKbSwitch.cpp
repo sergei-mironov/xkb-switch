@@ -37,8 +37,8 @@ void usage()
 	cerr << "       xkb-switch -l|--list         Displays all layout groups" << endl;
 	cerr << "       xkb-switch -h|--help         Displays this message" << endl;
 	cerr << "       xkb-switch -v|--version      Shows version number" << endl;
-	cerr << "       xkb-switch -w|--wait [-p]    Waits for group change and exits" << endl;
-	cerr << "       xkb-switch -W                Infinitely waits for group change" << endl;
+	cerr << "       xkb-switch -w|--wait [-p]    Waits for group change" << endl;
+	cerr << "       xkb-switch -W                Infinitely waits for group change, prints group names to stdout" << endl;
 	cerr << "       xkb-switch -n|--next         Switch to the next layout group" << endl;
 	cerr << "       xkb-switch [-p]              Displays current layout group" << endl;
 }
