@@ -37,9 +37,7 @@ Usage
 	       xkb-switch -w|--wait [-p]    Waits for group change and exits
 	       xkb-switch -W                Infinitely waits for group change
 	       xkb-switch -n|--next         Switch to the next layout group
-           xkb-switch -x                Print X layout string
 	       xkb-switch [-p]              Displays current layout group
-	       xkb-switch --test            Run some internal tests
 
 VIM integration
 ---------------
