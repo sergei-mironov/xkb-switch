@@ -27,6 +27,10 @@
 #include <sstream>
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
+#include <map>
+#include <string>
+
+using std::string;
 
 namespace kb {
 
@@ -49,10 +53,13 @@ public:
 	void set_group(int num);
 
 	// Returns keyboard layout string
-	std::string get_kb_string();
+	void BuildLayout(string_vector& vec);
 
 	// Waits for kb event
 	void wait_event();
+
+private:
+
 };
 
 // Parses keyboard string returned by get_kb_stirng. ns are symbols to ignore,
