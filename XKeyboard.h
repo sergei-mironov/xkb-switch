@@ -62,28 +62,6 @@ private:
 
 };
 
-// Parses keyboard string returned by get_kb_stirng. ns are symbols to ignore,
-// normally the result of nonsyms()
-string_vector parse1(const std::string& symbols, const string_vector& ns);
-string_vector parse2(const std::string& symbols, const string_vector& ns);
-string_vector parse3(const std::string& symbols, const string_vector& ns);
-
-// Symbols to be ignored by the parser
-inline string_vector nonsyms()
-{
-	string_vector nonsyms;
-	nonsyms.push_back("group");
-	nonsyms.push_back("inet");
-	nonsyms.push_back("ctr");
-	nonsyms.push_back("pc");
-	nonsyms.push_back("ctrl");
-	nonsyms.push_back("capslock");
-	nonsyms.push_back("compose");
-	nonsyms.push_back("terminate");
-	nonsyms.push_back("eurosign");
-	return nonsyms;
-}
-
 }
 
 #endif

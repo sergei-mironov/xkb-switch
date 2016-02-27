@@ -72,24 +72,7 @@ namespace
             return symNames;
         }
 
-        loaded = true;
-        XkbGetControls( xkb->_display, XkbAllControlsMask, xkb->_kbdDescPtr );
-        XkbGetNames( xkb->_display, XkbSymbolsNameMask, xkb->_kbdDescPtr );
-
-        Atom symNameAtom = xkb->_kbdDescPtr->names->symbols;
-        if ( symNameAtom == None )
-            return symNames;
-
-        char *  symNameC = XGetAtomName( xkb->_display, symNameAtom );
-        string  symName( symNameC );
-
-        XFree( symNameC );
-
-        if ( symName.empty() )
-            return symNames;
-
-        symNames = parse2( symName, nonsyms() );
-
+        xkb->BuildLayout(symNames);
         return symNames;
     }
 }
