@@ -13,7 +13,7 @@ OPTION(BUILD_XKBSWITCH_LIB
 if(BUILD_XKBSWITCH_LIB)
     SET(xkblib xkbswitch)
     ADD_LIBRARY(${xkblib} SHARED XKbSwitchApi.cpp XKeyboard.cpp)
-    TARGET_LINK_LIBRARIES(${xkblib} X11)
+    TARGET_LINK_LIBRARIES(${xkblib} X11 xkbfile)
 endif()
 
 ADD_CUSTOM_TARGET(ctags

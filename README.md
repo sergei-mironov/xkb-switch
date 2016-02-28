@@ -42,9 +42,15 @@ Usage
 VIM integration
 ---------------
 
-Xkb-switch now contains a library libxkbswitch.so which can be called from
-within Vim scripts. See this [article in Russian](http://lin-techdet.blogspot.ru/2012/12/vim-xkb-switch-libcall.html) for
-details. Thanks to lyokha for contribution.
+Xkb-switch goes with a library libxkbswitch.so which can be called from
+within Vim scripts like this:
+
+        let g:XkbSwitchLib = "/path/to/libxkbswitch.so"
+        echo libcall(g:XkbSwitchLib, 'Xkb_Switch_getXkbLayout', '')
+        call libcall(g:XkbSwitchLib, 'Xkb_Switch_setXkbLayout', 'us')
+
+See also [article in Russian](http://lin-techdet.blogspot.ru/2012/12/vim-xkb-switch-libcall.html)
+describing complex solution.
 
 Layout groups
 -------------
