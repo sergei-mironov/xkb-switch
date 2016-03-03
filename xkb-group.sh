@@ -27,6 +27,17 @@ while test -n "$1" ; do
 	shift
 done
 
+XKBS=`which xkb-switch 2>/dev/null`
+if ! test -e "$XKBS" ; then
+        XKBS=./xkb-switch
+fi
+if ! test -e "$XKBS" ; then
+        XKBS=./build/xkb-switch
+fi
+if ! test -e "$XKBS" ; then
+        die "xkb-switch not found"
+fi
+
 test -n "$lay1" || { die "error: LAY1 is empty, try --help"; }
 test -n "$lay2" || { die "error: LAY2 is empty, try --help"; }
 
@@ -46,15 +57,15 @@ while read event arg <$FIFO ; do
 			esac
 			;;
 		user-asks-switch)
-			xkb-switch -s $next ;;
+			$XKBS -s $next ;;
 		*)
 			echo "unknown command: $event $arg" >&2
 			;;
 	esac
 done &
 
-echo layout-change `xkb-switch -p` >$FIFO
-xkb-switch -W | while read l ;do
+echo layout-change `$XKBS -p` >$FIFO
+$XKBS -W | while read l ;do
 	echo "layout-change $l" >$FIFO
 done &
 
