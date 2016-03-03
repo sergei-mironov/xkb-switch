@@ -18,12 +18,17 @@ Xkb-switch is licensed under the GNU GPLv3, see COPYING for details.
 Building
 --------
 
-To build the program manually, do the following.
+Make sure you have package *libxkbfile-dev* installed.
 
-1. Unpack the tarball and cd to source directory
-2. cmake .
-3. make
-4. sudo make install
+_CMake Hacker wanted: please help me to express this dependency in CMakeLists.txt_
+
+To build the program manually, unpack the tarball and cd to source directory,
+than type the following commands:
+
+        $ mkdir build && cd build
+        $ cmake ..
+        $ make
+        $ sudo make install
 
 Usage
 -----
