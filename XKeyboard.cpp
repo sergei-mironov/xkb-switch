@@ -16,7 +16,7 @@
 #include <cctype>
 #include <cstring>
 #include <X11/XKBlib.h>
-#include "X11/extensions/XKBrules.h"
+#include <X11/extensions/XKBrules.h>
 
 #ifndef DFLT_XKB_LAYOUT
 #define	DFLT_XKB_LAYOUT "us"
