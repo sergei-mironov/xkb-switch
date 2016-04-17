@@ -18,22 +18,18 @@
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKBrules.h>
 
-#ifndef DFLT_XKB_LAYOUT
-#define	DFLT_XKB_LAYOUT "us"
-#endif
-
-#ifndef NO_KEYBOARD
-#define	NO_KEYBOARD "no keyboard"
-#endif
-
-
 #include <iostream>
 #include <string>
+#include <sstream>
 
 namespace kb {
 
 XKeyboard::XKeyboard()
   : _display(0), _deviceId(XkbUseCoreKbd)
+{
+}
+
+void XKeyboard::open_display()
 {
 
   XkbIgnoreExtension(False);
@@ -44,6 +40,7 @@ XKeyboard::XKeyboard()
   int major = XkbMajorVersion;
   int minor = XkbMinorVersion;
   int reasonReturn;
+
   _display = XkbOpenDisplay(displayName, &eventCode, &errorReturn, &major,
       &minor, &reasonReturn);
   switch (reasonReturn) {
@@ -65,7 +62,6 @@ XKeyboard::XKeyboard()
 
   _kbdDescPtr = XkbAllocKeyboard();
   if (_kbdDescPtr == NULL) {
-    XCloseDisplay(_display);
     throw X11Exception("Failed to get keyboard description.");
   }
 
@@ -84,34 +80,36 @@ XKeyboard::~XKeyboard()
 }
 
 
-void XKeyboard::BuildLayout(string_vector& vec)
+void XKeyboard::build_layout(string_vector& out)
 {
-	XkbRF_VarDefsRec vdr;
-	int i = 0;
-	char str[256] = {0};
-	const char s[2] = ",";
-	char *token;
-	char* tmp = NULL;
+  using namespace std;
 
-  	strncpy(str, (
-            !_display ? NO_KEYBOARD :
-            (XkbRF_GetNamesProp(_display, &tmp, &vdr) && vdr.layout) ?
-            vdr.layout : DFLT_XKB_LAYOUT),
-            256);
-        str[255] = 0;
+  XkbRF_VarDefsRec vdr;
+  char* tmp = NULL;
+  Bool bret;
 
-	/* get the first token */
-	token = strtok(str, s);
+  bret = XkbRF_GetNamesProp(_display, &tmp, &vdr);
+  CHECK_MSG(bret==True, "Failed to get keyboard properties");
 
-	/* walk through other tokens */
-	while( token != NULL )
-	{
-	  vec.push_back(token);
-	  token = strtok(NULL, s);
-	}
+  istringstream layout(vdr.layout ? vdr.layout : "us");
+  istringstream variant(vdr.variant ? vdr.variant : "");
+
+  while(true) {
+    string l,v;
+
+    getline(layout, l, ',');
+    getline(variant, v, ',');
+    if(!layout && !variant)
+      break;
+
+    if(v!="") {
+      v = "(" + v + ")";
+    }
+    if(l!="") {
+      out.push_back(l+v);
+    }
+  }
 }
-
-
 
 void XKeyboard::wait_event()
 {

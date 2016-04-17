@@ -36,15 +36,20 @@ namespace kb {
 
 typedef std::vector<std::string> string_vector;
 
+
 class XKeyboard
 {
 public:
+
 	Display* _display;
 	int _deviceId;
 	XkbDescRec* _kbdDescPtr;
 
 	XKeyboard();
 	~XKeyboard();
+
+  // Opens display (or throw X11Exception)
+  void open_display(void);
 
 	// Gets the current layout
 	int get_group() const;
@@ -53,7 +58,7 @@ public:
 	void set_group(int num);
 
 	// Returns keyboard layout string
-	void BuildLayout(string_vector& vec);
+	void build_layout(string_vector& vec);
 
 	// Waits for kb event
 	void wait_event();

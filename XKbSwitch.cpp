@@ -72,8 +72,6 @@ int main( int argc, char* argv[] )
 		int m_list = 0;
 		string newgrp;
 
-		XKeyboard xkb;
-
 		for(int i=1; i<argc; i) {
 			string arg(argv[i++]);
 			if(arg == "-s") {
@@ -121,6 +119,9 @@ int main( int argc, char* argv[] )
 		if(m_cnt==0)
 			m_print = 1;
 
+		XKeyboard xkb;
+    xkb.open_display();
+
 		if(m_wait) {
 			xkb.wait_event();
 		}
@@ -128,7 +129,7 @@ int main( int argc, char* argv[] )
 		if(m_lwait) {
 			while(true) {
 				xkb.wait_event();
-				xkb.BuildLayout(syms);
+				xkb.build_layout(syms);
 				cout << syms.at(xkb.get_group()) << endl;
 			}
 		}
@@ -136,7 +137,7 @@ int main( int argc, char* argv[] )
 		if (m_lwait)
 			syms.clear();
 
-		xkb.BuildLayout(syms);
+		xkb.build_layout(syms);
 
 		if (m_next) {
 			CHECK_MSG(!syms.empty(), "No layout groups configured");

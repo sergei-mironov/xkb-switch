@@ -39,6 +39,7 @@ namespace
                 try
                 {
                     xkb = new XKeyboard();
+                    xkb->open_display();
                 }
                 catch( ... )
                 {
@@ -72,7 +73,7 @@ namespace
             return symNames;
         }
 
-        xkb->BuildLayout(symNames);
+        xkb->build_layout(symNames);
         return symNames;
     }
 }
