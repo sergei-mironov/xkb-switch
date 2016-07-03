@@ -112,7 +112,7 @@ int main( int argc, char* argv[] )
 			}
 		}
 
-		if(m_list || m_lwait || !newgrp.empty() || m_next)
+		if(m_list || m_lwait || !newgrp.empty())
 			CHECK_MSG(m_cnt==1, "Invalid flag combination. Try --help.");
 
 		// Default action
