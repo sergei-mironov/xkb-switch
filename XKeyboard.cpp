@@ -128,6 +128,7 @@ void XKeyboard::set_group(int groupNum)
 {
   Bool result = XkbLockGroup(_display, _deviceId, groupNum);
   CHECK(result == True);
+  (void) get_group();
 }
 
 int XKeyboard::get_group() const
