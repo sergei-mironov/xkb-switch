@@ -149,7 +149,7 @@ int main( int argc, char* argv[] )
 		else if(!newgrp.empty()) {
 			string_vector::iterator i = find(syms.begin(), syms.end(), newgrp);
 			CHECK_MSG(i!=syms.end(),
-				"Group " << newgrp << "' is not supported by current layout. Try xkb-switch -l.");
+				"Group '" << newgrp << "' is not supported by current layout. Try xkb-switch -l.");
 			xkb.set_group(i-syms.begin());
 		}
 
