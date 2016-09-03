@@ -73,6 +73,7 @@ namespace
             return symNames;
         }
 
+        loaded = true;
         xkb->build_layout(symNames);
         return symNames;
     }
