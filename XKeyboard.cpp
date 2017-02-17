@@ -25,7 +25,7 @@
 namespace kb {
 
 XKeyboard::XKeyboard()
-  : _display(0), _deviceId(XkbUseCoreKbd)
+  : _display(0), _deviceId(XkbUseCoreKbd), _kbdDescPtr(0)
 {
 }
 
@@ -76,7 +76,9 @@ XKeyboard::~XKeyboard()
   if(_kbdDescPtr!=NULL)
     XkbFreeKeyboard(_kbdDescPtr, 0, True);
 
-  XCloseDisplay(_display);
+  if (_display!=NULL) {
+      XCloseDisplay(_display);
+  }
 }
 
 
