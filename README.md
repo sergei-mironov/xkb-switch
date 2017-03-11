@@ -44,6 +44,11 @@ Usage
 	       xkb-switch -n|--next         Switch to the next layout group
 	       xkb-switch [-p]              Displays current layout group
 
+
+*A note on `xkb-switch -x`*
+Command line option `xkb-switch -x` has been removed recently. Please, use `setxkbmap
+-query` or `setxkbmap -print` to obtain debug information.
+
 VIM integration
 ---------------
 
@@ -81,8 +86,6 @@ Bugs or Problems
 Admittedly, I only tested with a few different layouts that I used. If you find
 any bugs let me know at Github or ierton@gmail.com.
 
-Xkb-switch contains some testing facilities, please include output of
-`xkb-switch -x' command in the report.
 
 Sergey.
 
