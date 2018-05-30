@@ -84,8 +84,8 @@ Bugs or Problems
 ----------------
 
 Admittedly, I only tested with a few different layouts that I used. If you find
-any bugs let me know at Github or ierton@gmail.com.
+any bugs let me know by submitting an issue or via grrwlf@gmail.com.
 
-
+Regards,
 Sergey.
 
