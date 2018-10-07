@@ -18,7 +18,7 @@ Xkb-switch is licensed under the GNU GPLv3, see COPYING for details.
 Building
 --------
 
-Make sure you have package *libxkbfile-dev* installed.
+Make sure you have package *libxkbfile-dev* (or *libxkbfile-devel* for Fedora) installed.
 
 _CMake Hacker wanted: please help me to express this dependency in CMakeLists.txt_
 
