@@ -30,6 +30,11 @@ than type the following commands:
         $ make
         $ sudo make install
 
+If it's the first time you're installing this program, the following command is also 
+needed:
+
+        $ sudo ldconfig
+
 Usage
 -----
 
