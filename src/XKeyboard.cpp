@@ -86,15 +86,32 @@ void XKeyboard::build_layout(string_vector& out)
 {
   using namespace std;
 
-  XkbRF_VarDefsRec vdr;
+  XkbRF_VarDefsRec vdr{}; // zero-initialize all pointers inside
   char* tmp = NULL;
   Bool bret;
+  istringstream layout;
+  istringstream variant;
+
+  // XkbRF_VarDefsRec contains heap-allocated C strings, but doesn't provide a direct cleanup method, so freeing its members manually
+  auto cleanup_vdr = [&vdr]() noexcept {
+    free(vdr.model);
+    free(vdr.layout);
+    free(vdr.variant);
+    free(vdr.options);
+  };
 
   bret = XkbRF_GetNamesProp(_display, &tmp, &vdr);
-  CHECK_MSG(bret==True, "Failed to get keyboard properties");
+  try {
+    CHECK_MSG(bret==True, "Failed to get keyboard properties");
 
-  istringstream layout(vdr.layout ? vdr.layout : "us");
-  istringstream variant(vdr.variant ? vdr.variant : "");
+    layout = istringstream{vdr.layout ? vdr.layout : "us"};
+    variant = istringstream{vdr.variant ? vdr.variant : ""};
+  } catch(...) {
+    cleanup_vdr();
+    throw;
+  }
+  cleanup_vdr();
+
 
   while(true) {
     string l,v;
