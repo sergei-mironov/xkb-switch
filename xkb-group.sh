@@ -15,12 +15,12 @@ usage() { (
 )>&2 ; }
 
 while test -n "$1" ; do
-	case $1 in
+	case "$1" in
 		-h|--help)
 			usage ; die ;;
 		*)
-			lay1=$1
-			lay2=$2
+			lay1="$1"
+			lay2="$2"
 			shift
 			;;
 	esac
@@ -49,15 +49,15 @@ while read event arg <$FIFO ; do
 	debug "$event $arg" >&2
 	case $event in
 		layout-change)
-			lay=$arg
-			case $lay in
-				$lay1) next=$lay2;;
-				*) next=$lay1
-				   lay2=$lay;;
+			lay="$arg"
+			case "$lay" in
+				$lay1) next="$lay2";;
+				*) next="$lay1"
+				   lay2="$lay";;
 			esac
 			;;
 		user-asks-switch)
-			$XKBS -s $next ;;
+			$XKBS -s "$next" ;;
 		*)
 			echo "unknown command: $event $arg" >&2
 			;;
