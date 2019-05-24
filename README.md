@@ -18,37 +18,47 @@ Xkb-switch is licensed under the GNU GPLv3, see COPYING for details.
 Building
 --------
 
-Make sure you have package *libxkbfile-dev* (or *libxkbfile-devel* for Fedora) installed.
+Make sure you have package *libxkbfile-dev* (or *libxkbfile-devel* for Fedora)
+installed. _CMake Hacker wanted: please help me to express this dependency in
+CMakeLists.txt_. For NixOS users, the following command should open the minimally
+sufficient development shell:
 
-_CMake Hacker wanted: please help me to express this dependency in CMakeLists.txt_
+```
+    $ nix-shell -p cmake xlibs.libX11.dev xlibs.libxkbfile.dev
+```
 
 To build the program manually, unpack the tarball and cd to source directory,
-than type the following commands:
+then type the following commands:
 
-        $ mkdir build && cd build
-        $ cmake ..
-        $ make
-        $ sudo make install
+```
+    $ mkdir build && cd build
+    $ cmake ..
+    $ make
+    $ sudo make install
+```
 
-If it's the first time you're installing this program, the following command is also 
+If it's the first time you're installing this program, the following command is also
 needed:
 
-        $ sudo ldconfig
+```
+    $ sudo ldconfig
+```
 
 Usage
 -----
 
-	$ xkb-switch --help
+```
+    $ xkb-switch --help
 
-	Usage: xkb-switch -s ARG            Sets current layout group to ARG
-	       xkb-switch -l|--list         Displays all layout groups
-	       xkb-switch -h|--help         Displays this message
-	       xkb-switch -v|--version      Shows version number
-	       xkb-switch -w|--wait [-p]    Waits for group change and exits
-	       xkb-switch -W                Infinitely waits for group change
-	       xkb-switch -n|--next         Switch to the next layout group
-	       xkb-switch [-p]              Displays current layout group
-
+    Usage: xkb-switch -s ARG            Sets current layout group to ARG
+           xkb-switch -l|--list         Displays all layout groups
+           xkb-switch -h|--help         Displays this message
+           xkb-switch -v|--version      Shows version number
+           xkb-switch -w|--wait [-p]    Waits for group change and exits
+           xkb-switch -W                Infinitely waits for group change
+           xkb-switch -n|--next         Switch to the next layout group
+           xkb-switch [-p]              Displays current layout group
+```
 
 *A note on `xkb-switch -x`*
 Command line option `xkb-switch -x` has been removed recently. Please, use `setxkbmap
@@ -60,9 +70,11 @@ VIM integration
 Xkb-switch goes with a library libxkbswitch.so which can be called from
 within Vim scripts like this:
 
-        let g:XkbSwitchLib = "/path/to/libxkbswitch.so"
-        echo libcall(g:XkbSwitchLib, 'Xkb_Switch_getXkbLayout', '')
-        call libcall(g:XkbSwitchLib, 'Xkb_Switch_setXkbLayout', 'us')
+```
+    let g:XkbSwitchLib = "/path/to/libxkbswitch.so"
+    echo libcall(g:XkbSwitchLib, 'Xkb_Switch_getXkbLayout', '')
+    call libcall(g:XkbSwitchLib, 'Xkb_Switch_setXkbLayout', 'us')
+```
 
 See also [article in Russian](http://lin-techdet.blogspot.ru/2012/12/vim-xkb-switch-libcall.html)
 describing complex solution.
@@ -74,16 +86,18 @@ xkb-group.sh can help you to manage layout groups. Just run it and send some
 input at it's stdin every time you want to trigger layouts from primary to
 secondary and back. For example:
 
-	$ xkb-group.sh us ru
-	switch # switch from us to ru or from current layout to us
-	switch # switch from ru to us or from us to ru
+```
+    $ xkb-group.sh us ru
+    switch # switch from us to ru or from current layout to us
+    switch # switch from ru to us or from us to ru
 
-	(from other terminal)
-	$ xkb-switch -s de # switch to 'de' layout, change secondary layout to 'de'
+    (from other terminal)
+    $ xkb-switch -s de # switch to 'de' layout, change secondary layout to 'de'
 
-	(back to terminal running xkb-group.sh)
-	switch # switch from de to us
-	switch # switch from us to de
+    (back to terminal running xkb-group.sh)
+    switch # switch from de to us
+    switch # switch from us to de
+```
 
 Bugs or Problems
 ----------------
