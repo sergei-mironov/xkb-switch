@@ -1,8 +1,7 @@
 #!/bin/sh
 
 die() { echo $@ >&2 ; exit 1 ; }
-# debug() { echo $@ >&2 ; }
-debug() { return 0 ;}
+debug() { if test -n "$XKB_GROUP_DEBUG" ; then echo $@ >&2 ; fi }
 
 usage() { (
 	printf "`basename $0` waits for any user input, then switches between primary and secondary layout\n"
@@ -12,6 +11,8 @@ usage() { (
 	printf "\tLAY2 - initial secondary layout\n"
 	printf "Example:\n"
 	printf "`basename $0` us ru - switches between 'us' and some secondary layout, initially 'ru'\n"
+	printf ""
+	printf "To debug the script, set XKB_GROUP_DEBUG to non-zero value before the start"
 )>&2 ; }
 
 while test -n "$1" ; do
