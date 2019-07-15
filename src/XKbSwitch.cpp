@@ -25,11 +25,8 @@
 #include <X11/XKBlib.h>
 #include <sstream>
 
-#define XKB_SWITCH_VERSION "1.5.2"
-
 using namespace std;
 using namespace kb;
-
 
 void usage()
 {
@@ -84,7 +81,7 @@ int main( int argc, char* argv[] )
 				m_cnt++;
 			}
 			else if(arg == "-v" || arg=="--version") {
-				cerr << "xkb-switch " << XKB_SWITCH_VERSION << endl;
+				cerr << "xkb-switch " << XKBSWITCH_VERSION << endl;
 				return 0;
 			}
 			else if(arg == "-w" || arg == "--wait") {

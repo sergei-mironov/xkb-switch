@@ -5,8 +5,7 @@ SET(MAJOR_VERSION 1)
 SET(MINOR_VERSION 5)
 SET(RELEASE_VERSION 2)
 SET(XKBSWITCH_VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${RELEASE_VERSION})
-
-FIND_PROGRAM(CTAGS ctags)
+ADD_DEFINITIONS(-DXKBSWITCH_VERSION="${XKBSWITCH_VERSION}")
 
 OPTION(BUILD_XKBSWITCH_LIB
     "Build a library compatible with vim's libcall interface" ON)
@@ -21,10 +20,6 @@ else()
     ADD_EXECUTABLE(xkb-switch src/XKbSwitch.cpp src/XKeyboard.cpp)
     TARGET_LINK_LIBRARIES(xkb-switch X11 xkbfile)
 endif()
-
-ADD_CUSTOM_TARGET(ctags
-    COMMAND ${CTAGS} -R ${CMAKE_SOURCE_DIR}/*
-)
 
 INSTALL(TARGETS xkb-switch ${xkblib}
     RUNTIME DESTINATION bin
