@@ -81,37 +81,41 @@ XKeyboard::~XKeyboard()
   }
 }
 
+// XkbRF_VarDefsRec contains heap-allocated C strings, but doesn't provide a
+// direct cleanup method. This wrapper privides a workaround.
+// See also https://gitlab.freedesktop.org/xorg/lib/libxkbfile/issues/6
+struct XkbRF_VarDefsRec_wrapper {
+
+  XkbRF_VarDefsRec _it;
+
+  XkbRF_VarDefsRec_wrapper() {
+    std::memset(&_it,0,sizeof(_it));
+  }
+
+  ~XkbRF_VarDefsRec_wrapper() {
+    if(_it.model) std::free(_it.model);
+    if(_it.layout) std::free(_it.layout);
+    if(_it.variant) std::free(_it.variant);
+    if(_it.options) std::free(_it.options);
+  }
+};
+
 
 void XKeyboard::build_layout(string_vector& out)
 {
   using namespace std;
 
-  XkbRF_VarDefsRec vdr{}; // zero-initialize all pointers inside
+  XkbRF_VarDefsRec_wrapper vdr;
   char* tmp = NULL;
   Bool bret;
   istringstream layout;
   istringstream variant;
 
-  // XkbRF_VarDefsRec contains heap-allocated C strings, but doesn't provide a direct cleanup method, so freeing its members manually
-  auto cleanup_vdr = [&vdr]() noexcept {
-    free(vdr.model);
-    free(vdr.layout);
-    free(vdr.variant);
-    free(vdr.options);
-  };
+  bret = XkbRF_GetNamesProp(_display, &tmp, &vdr._it);
+  CHECK_MSG(bret==True, "Failed to get keyboard properties");
 
-  bret = XkbRF_GetNamesProp(_display, &tmp, &vdr);
-  try {
-    CHECK_MSG(bret==True, "Failed to get keyboard properties");
-
-    layout = istringstream{vdr.layout ? vdr.layout : "us"};
-    variant = istringstream{vdr.variant ? vdr.variant : ""};
-  } catch(...) {
-    cleanup_vdr();
-    throw;
-  }
-  cleanup_vdr();
-
+  layout = istringstream{vdr._it.layout ? vdr._it.layout : "us"};
+  variant = istringstream{vdr._it.variant ? vdr._it.variant : ""};
 
   while(true) {
     string l,v;
