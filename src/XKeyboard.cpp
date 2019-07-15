@@ -103,19 +103,15 @@ struct XkbRF_VarDefsRec_wrapper {
 
 void XKeyboard::build_layout(string_vector& out)
 {
-  using namespace std;
-
   XkbRF_VarDefsRec_wrapper vdr;
   char* tmp = NULL;
   Bool bret;
-  istringstream layout;
-  istringstream variant;
 
   bret = XkbRF_GetNamesProp(_display, &tmp, &vdr._it);
   CHECK_MSG(bret==True, "Failed to get keyboard properties");
 
-  layout = istringstream{vdr._it.layout ? vdr._it.layout : "us"};
-  variant = istringstream{vdr._it.variant ? vdr._it.variant : ""};
+  std::istringstream layout(vdr._it.layout ? vdr._it.layout : "us");
+  std::istringstream variant(vdr._it.variant ? vdr._it.variant : "");
 
   while(true) {
     string l,v;

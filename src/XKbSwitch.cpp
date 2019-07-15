@@ -25,7 +25,7 @@
 #include <X11/XKBlib.h>
 #include <sstream>
 
-#define XKB_SWITCH_VERSION "1.5.1"
+#define XKB_SWITCH_VERSION "1.5.2"
 
 using namespace std;
 using namespace kb;
