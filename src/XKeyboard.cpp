@@ -34,7 +34,7 @@ void XKeyboard::open_display()
 
   XkbIgnoreExtension(False);
 
-  char* displayName = strdup("");
+  char* displayName = strdup(""); // allocates memory for string!
   int eventCode;
   int errorReturn;
   int major = XkbMajorVersion;
@@ -43,6 +43,7 @@ void XKeyboard::open_display()
 
   _display = XkbOpenDisplay(displayName, &eventCode, &errorReturn, &major,
       &minor, &reasonReturn);
+  free(displayName);
   switch (reasonReturn) {
     case XkbOD_BadLibraryVersion:
       throw X11Exception("Bad XKB library version.");
@@ -108,6 +109,7 @@ void XKeyboard::build_layout(string_vector& out)
   Bool bret;
 
   bret = XkbRF_GetNamesProp(_display, &tmp, &vdr._it);
+  free(tmp);  // return memory allocated by XkbRF_GetNamesProp
   CHECK_MSG(bret==True, "Failed to get keyboard properties");
 
   std::istringstream layout(vdr._it.layout ? vdr._it.layout : "us");
