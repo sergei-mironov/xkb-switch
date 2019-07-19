@@ -109,6 +109,7 @@ void XKeyboard::build_layout(string_vector& out)
   Bool bret;
 
   bret = XkbRF_GetNamesProp(_display, &tmp, &vdr._it);
+  free(tmp);  // return memory allocated by XkbRF_GetNamesProp
   CHECK_MSG(bret==True, "Failed to get keyboard properties");
 
   std::istringstream layout(vdr._it.layout ? vdr._it.layout : "us");
