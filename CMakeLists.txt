@@ -7,6 +7,15 @@ SET(RELEASE_VERSION 3)
 SET(XKBSWITCH_VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${RELEASE_VERSION})
 ADD_DEFINITIONS(-DXKBSWITCH_VERSION="${XKBSWITCH_VERSION}")
 
+# Check presence of development libraries required for build
+FIND_PACKAGE(X11 REQUIRED)
+if(NOT X11_FOUND)
+    message(FATAL_ERROR "Not found development files of 'libx11' required for build. (Install libx11-dev or libx11-devel package.) CMake will exit.")
+elseif(NOT X11_Xkbfile_FOUND)
+    message(FATAL_ERROR "Not found development files of 'libxkbfile' required for build. (Install libxkbfile-dev or libxkbfile-devel package.) CMake will exit.")
+endif()
+
+# Compile and link
 OPTION(BUILD_XKBSWITCH_LIB
     "Build a library compatible with vim's libcall interface" ON)
 if(BUILD_XKBSWITCH_LIB)
@@ -21,6 +30,7 @@ else()
     TARGET_LINK_LIBRARIES(xkb-switch X11 xkbfile)
 endif()
 
+# Install
 INSTALL(TARGETS xkb-switch ${xkblib}
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib OPTIONAL
