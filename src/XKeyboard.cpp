@@ -9,18 +9,20 @@
  * any later version.
  */
 
-#include "XKeyboard.h"
-#include "X11Exception.h"
 #include <algorithm>
 #include <cstdlib>
 #include <cctype>
 #include <cstring>
-#include <X11/XKBlib.h>
-#include <X11/extensions/XKBrules.h>
 
 #include <iostream>
 #include <string>
 #include <sstream>
+
+#include <X11/XKBlib.h>
+#include <X11/extensions/XKBrules.h>
+
+#include "XKeyboard.h"
+#include "XKbSwitch.hpp"
 
 namespace kb {
 
@@ -45,25 +47,17 @@ void XKeyboard::open_display()
       &minor, &reasonReturn);
   free(displayName);
   switch (reasonReturn) {
-    case XkbOD_BadLibraryVersion:
-      throw X11Exception("Bad XKB library version.");
-      break;
-    case XkbOD_ConnectionRefused:
-      throw X11Exception("Connection to X server refused.");
-      break;
-    case XkbOD_BadServerVersion:
-      throw X11Exception("Bad X11 server version.");
-      break;
-    case XkbOD_NonXkbServer:
-      throw X11Exception("XKB not present.");
-      break;
-    case XkbOD_Success:
-      break;
+    case XkbOD_Success:           break;
+    case XkbOD_BadLibraryVersion: THROW_MSG("Bad XKB library version.");
+    case XkbOD_ConnectionRefused: THROW_MSG("Connection to X server refused.");
+    case XkbOD_BadServerVersion:  THROW_MSG("Bad X11 server version.");
+    case XkbOD_NonXkbServer:      THROW_MSG("XKB not present.");
+    default:                      THROW_MSG("XKB refused to open the display with reason '" << reasonReturn << "'.");
   }
 
   _kbdDescPtr = XkbAllocKeyboard();
   if (_kbdDescPtr == NULL) {
-    throw X11Exception("Failed to get keyboard description.");
+    THROW_MSG("Failed to get keyboard description.");
   }
 
   _kbdDescPtr->dpy = _display;
@@ -78,7 +72,7 @@ XKeyboard::~XKeyboard()
     XkbFreeKeyboard(_kbdDescPtr, 0, True);
 
   if (_display!=NULL) {
-      XCloseDisplay(_display);
+    XCloseDisplay(_display);
   }
 }
 

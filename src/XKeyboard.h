@@ -48,7 +48,7 @@ public:
 	XKeyboard();
 	~XKeyboard();
 
-  // Opens display (or throw X11Exception)
+  // Opens display (or throw std::runtime_error)
   void open_display(void);
 
 	// Gets the current layout

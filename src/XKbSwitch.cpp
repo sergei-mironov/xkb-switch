@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Xkb-switch. If not, see <http://www.gnu.org/licenses/>.
  */
+#include <X11/XKBlib.h>
 
 #include <iostream>
 #include <algorithm>
-#include "XKeyboard.h"
-#include "X11Exception.h"
-#include <X11/XKBlib.h>
 #include <sstream>
+
+#include "XKeyboard.h"
+#include "XKbSwitch.hpp"
 
 using namespace std;
 using namespace kb;
@@ -105,7 +106,7 @@ int main( int argc, char* argv[] )
 				return 1;
 			}
 			else {
-				throw string("Invalid argument: " + arg);
+				THROW_MSG("Invalid argument: '" << arg << "'. Check --help.");
 			}
 		}
 
@@ -154,25 +155,17 @@ int main( int argc, char* argv[] )
 			cout << syms.at(xkb.get_group()) << endl;
 		}
 
-		if(m_list) {
-			for(int i=0; i<syms.size(); i++) {
-				cout << syms[i] << endl;
-			}
-		}
-		return 0;
-	}
-	catch(X11Exception &err) {
-		cerr << "xkb-switch: " << err.what() << endl;
-		cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
-		return 2;
-	}
-	catch(std::string & err) {
-		cerr << "xkb-switch: " << err << endl;
-		cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
-		return 2;
-	}
-	catch(std::exception & err) {
-		cerr << "xkb-switch: " << err.what() << endl;
-		cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
-	}
+    if(m_list) {
+      for(int i=0; i<syms.size(); i++) {
+        cout << syms[i] << endl;
+      }
+    }
+    return 0;
+  }
+  catch(std::exception & err) {
+    cerr << "xkb-switch: " << err.what() << endl;
+    // TODO: don't print syms if they are not yet collected
+    cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
+    return 2;
+  }
 }
