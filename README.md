@@ -15,30 +15,32 @@ X-related libraries, so it can be easily used with other software.
 
 Xkb-switch is licensed under the GNU GPLv3, see COPYING for details.
 
-Building
---------
+Installing
+----------
 
 Make sure you have package *libxkbfile-dev* (or *libxkbfile-devel* for Fedora)
 installed. _CMake Hacker wanted: please help me to express this dependency in
-CMakeLists.txt_. For NixOS users, the following command should open the minimally
-sufficient development shell:
+CMakeLists.txt_.
 
-```
-    $ nix-shell -p cmake xlibs.libX11.dev xlibs.libxkbfile.dev
-```
-
-To build the program manually, unpack the tarball and cd to source directory,
-then type the following commands:
+To build the program manually, unpack the tarball and cd to source directory.
+NixOS users may use `nix-shell` to enter the minimally sufficient development
+shell or `nix-build` to build the sources. Other distributions typically require
+the following commands to build in install the program:
 
 ```
     $ mkdir build && cd build
     $ cmake ..
     $ make
+```
+
+In order to install, use your system's package manager or default to the following:
+
+```
     $ sudo make install
 ```
 
-If it's the first time you're installing this program, the following command is also
-needed:
+On some distributions, you may need to update the program cache if it's the
+first time you're installing this program
 
 ```
     $ sudo ldconfig
