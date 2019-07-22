@@ -23,9 +23,10 @@ installed. _CMake Hacker wanted: please help me to express this dependency in
 CMakeLists.txt_.
 
 To build the program manually, unpack the tarball and cd to source directory.
-NixOS users may use `nix-shell` to enter the minimally sufficient development
-shell or `nix-build` to build the sources. Other distributions typically require
-the following commands to build in install the program:
+[Nix](http://nixos.org/nix) users may use `nix-shell` to enter the minimally
+sufficient development shell or `nix-build` to build the sources. Other
+distributions typically require the following commands to build in install the
+program:
 
 ```
     $ mkdir build && cd build
