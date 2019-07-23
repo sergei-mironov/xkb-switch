@@ -19,8 +19,7 @@ Installing
 ----------
 
 Make sure you have package *libxkbfile-dev* (or *libxkbfile-devel* for Fedora)
-installed. _CMake Hacker wanted: please help me to express this dependency in
-CMakeLists.txt_.
+installed.
 
 To build the program manually, unpack the tarball and cd to source directory.
 [Nix](http://nixos.org/nix) users may use `nix-shell` to enter the minimally
