@@ -14,6 +14,8 @@ if(NOT X11_FOUND)
 elseif(NOT X11_Xkbfile_FOUND)
     message(FATAL_ERROR "Not found development files of 'libxkbfile' required for build. (Install libxkbfile-dev or libxkbfile-devel package.) CMake will exit.")
 endif()
+INCLUDE_DIRECTORIES(${X11_INCLUDE_DIR})
+LINK_DIRECTORIES(${X11_LIBRARY_DIR})
 
 # Compile and link program
 OPTION(BUILD_XKBSWITCH_LIB
@@ -36,12 +38,14 @@ INSTALL(TARGETS xkb-switch ${xkblib}
     LIBRARY DESTINATION lib OPTIONAL
 )
 
+SET(MAN_COMPRESSION "xz" CACHE STRING "Manpages compression tool")
+SET(MANDIR "${CMAKE_INSTALL_PREFIX}/share/man" CACHE STRING "Manpages installation path")
+
 # Function to compress and install man page
 # Gets file name and type number
 function(install_man man_filename man_type)
     # check what compression tool is available
-    SET(MAN_COMPRESSION xz)
-    FIND_PROGRAM(COMPRESS_EXECUTABLE NAMES xz)
+    FIND_PROGRAM(COMPRESS_EXECUTABLE NAMES ${MAN_COMPRESSION})
     if(NOT COMPRESS_EXECUTABLE)
         FIND_PROGRAM(COMPRESS_EXECUTABLE NAMES gzip)
         if(COMPRESS_EXECUTABLE)
@@ -75,7 +79,7 @@ function(install_man man_filename man_type)
     # add actions
     ADD_CUSTOM_TARGET(man_${man_filename}_${man_type} ALL DEPENDS ${compressed_man})
     INSTALL(FILES ${compressed_man}
-        DESTINATION share/man/man${man_type}
+        DESTINATION ${MANDIR}/man${man_type}
     )
 endfunction()
 
