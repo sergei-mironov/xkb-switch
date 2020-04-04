@@ -35,7 +35,7 @@ using std::string;
 namespace kb {
 
 typedef std::vector<std::string> string_vector;
-
+typedef std::pair<std::string,std::string> layout_variant_strings;
 
 class XKeyboard
 {
@@ -57,7 +57,11 @@ public:
 	// Sets the layout
 	void set_group(int num);
 
+	// Return layout/variant strings
+	layout_variant_strings get_layout_variant();
+
 	// Returns keyboard layout string
+	void build_layout_from(string_vector& vec, const layout_variant_strings& lv);
 	void build_layout(string_vector& vec);
 
 	// Waits for kb event

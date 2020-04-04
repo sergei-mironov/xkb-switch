@@ -95,8 +95,7 @@ struct XkbRF_VarDefsRec_wrapper {
   }
 };
 
-
-void XKeyboard::build_layout(string_vector& out)
+layout_variant_strings XKeyboard::get_layout_variant()
 {
   XkbRF_VarDefsRec_wrapper vdr;
   char* tmp = NULL;
@@ -106,8 +105,14 @@ void XKeyboard::build_layout(string_vector& out)
   free(tmp);  // return memory allocated by XkbRF_GetNamesProp
   CHECK_MSG(bret==True, "Failed to get keyboard properties");
 
-  std::istringstream layout(vdr._it.layout ? vdr._it.layout : "us");
-  std::istringstream variant(vdr._it.variant ? vdr._it.variant : "");
+  return make_pair(string(vdr._it.layout ? vdr._it.layout : "us"),
+                   string(vdr._it.variant ? vdr._it.variant : ""));
+}
+
+void XKeyboard::build_layout_from(string_vector& out, const layout_variant_strings& lv)
+{
+  std::istringstream layout(lv.first);
+  std::istringstream variant(lv.second);
 
   while(true) {
     string l,v;
@@ -124,6 +129,13 @@ void XKeyboard::build_layout(string_vector& out)
       out.push_back(l+v);
     }
   }
+}
+
+
+void XKeyboard::build_layout(string_vector& out)
+{
+  layout_variant_strings lv=this->get_layout_variant();
+  build_layout_from(out, lv);
 }
 
 void XKeyboard::wait_event()
