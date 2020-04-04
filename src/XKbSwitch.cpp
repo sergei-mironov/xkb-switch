@@ -116,6 +116,10 @@ int main( int argc, char* argv[] )
       }
     }
 
+    if (verbose > 1) {
+      cerr << "[DEBUG] xkb-switch version " << XKBSWITCH_VERSION << endl;
+    }
+
     if(m_list || m_lwait || !newgrp.empty())
       CHECK_MSG(m_cnt==1, "Invalid flag combination. Try --help.");
 
