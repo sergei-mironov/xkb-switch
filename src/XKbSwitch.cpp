@@ -145,8 +145,8 @@ int main( int argc, char* argv[] )
 
     layout_variant_strings lv = xkb.get_layout_variant();
     if(verbose>1) {
-      cerr << "[DEBUG] layout: " << lv.first << endl;
-      cerr << "[DEBUG] variant: " << lv.second << endl;
+      cerr << "[DEBUG] layout: " << (lv.first.length() > 0 ? lv.first : "<empty>") << endl;
+      cerr << "[DEBUG] variant: " << (lv.second.length() > 0 ? lv.second : "<empty>") << endl;
     }
     xkb.build_layout_from(syms, lv);
     syms_collected = true;
