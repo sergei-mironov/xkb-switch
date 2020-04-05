@@ -72,7 +72,7 @@ VIM integration
 Xkb-switch goes with a library libxkbswitch.so which can be called from
 within Vim scripts like this:
 
-```
+```vim
     let g:XkbSwitchLib = "/path/to/libxkbswitch.so"
     echo libcall(g:XkbSwitchLib, 'Xkb_Switch_getXkbLayout', '')
     call libcall(g:XkbSwitchLib, 'Xkb_Switch_setXkbLayout', 'us')
