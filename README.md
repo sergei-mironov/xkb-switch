@@ -49,7 +49,7 @@ $ sudo ldconfig
 Usage
 -----
 
-```sh
+```
 $ xkb-switch --help
 
 Usage: xkb-switch -s ARG            Sets current layout group to ARG
@@ -93,10 +93,10 @@ $ xkb-group.sh us ru
 switch # switch from us to ru or from current layout to us
 switch # switch from ru to us or from us to ru
 
-(from other terminal)
+# from another terminal
 $ xkb-switch -s de # switch to 'de' layout, change secondary layout to 'de'
 
-(back to terminal running xkb-group.sh)
+# back to terminal running `xkb-group.sh'
 switch # switch from de to us
 switch # switch from us to de
 ```
