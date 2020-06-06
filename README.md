@@ -27,39 +27,39 @@ sufficient development shell or `nix-build` to build the sources. Other
 distributions typically require the following commands to build in install the
 program:
 
-```
-    $ mkdir build && cd build
-    $ cmake ..
-    $ make
+```sh
+$ mkdir build && cd build
+$ cmake ..
+$ make
 ```
 
 In order to install, use your system's package manager or default to the following:
 
-```
-    $ sudo make install
+```sh
+$ sudo make install
 ```
 
 On some distributions, you may need to update the program cache if it's the
 first time you're installing this program
 
-```
-    $ sudo ldconfig
+```sh
+$ sudo ldconfig
 ```
 
 Usage
 -----
 
-```
-    $ xkb-switch --help
+```sh
+$ xkb-switch --help
 
-    Usage: xkb-switch -s ARG            Sets current layout group to ARG
-           xkb-switch -l|--list         Displays all layout groups
-           xkb-switch -h|--help         Displays this message
-           xkb-switch -v|--version      Shows version number
-           xkb-switch -w|--wait [-p]    Waits for group change and exits
-           xkb-switch -W                Infinitely waits for group change
-           xkb-switch -n|--next         Switch to the next layout group
-           xkb-switch [-p]              Displays current layout group
+Usage: xkb-switch -s ARG            Sets current layout group to ARG
+       xkb-switch -l|--list         Displays all layout groups
+       xkb-switch -h|--help         Displays this message
+       xkb-switch -v|--version      Shows version number
+       xkb-switch -w|--wait [-p]    Waits for group change and exits
+       xkb-switch -W                Infinitely waits for group change
+       xkb-switch -n|--next         Switch to the next layout group
+       xkb-switch [-p]              Displays current layout group
 ```
 
 *A note on `xkb-switch -x`*
@@ -73,9 +73,9 @@ Xkb-switch goes with a library libxkbswitch.so which can be called from
 within Vim scripts like this:
 
 ```vim
-    let g:XkbSwitchLib = "/path/to/libxkbswitch.so"
-    echo libcall(g:XkbSwitchLib, 'Xkb_Switch_getXkbLayout', '')
-    call libcall(g:XkbSwitchLib, 'Xkb_Switch_setXkbLayout', 'us')
+let g:XkbSwitchLib = "/path/to/libxkbswitch.so"
+echo libcall(g:XkbSwitchLib, 'Xkb_Switch_getXkbLayout', '')
+call libcall(g:XkbSwitchLib, 'Xkb_Switch_setXkbLayout', 'us')
 ```
 
 See also [article in Russian](http://lin-techdet.blogspot.ru/2012/12/vim-xkb-switch-libcall.html)
@@ -88,17 +88,17 @@ xkb-group.sh can help you to manage layout groups. Just run it and send some
 input at it's stdin every time you want to trigger layouts from primary to
 secondary and back. For example:
 
-```
-    $ xkb-group.sh us ru
-    switch # switch from us to ru or from current layout to us
-    switch # switch from ru to us or from us to ru
+```sh
+$ xkb-group.sh us ru
+switch # switch from us to ru or from current layout to us
+switch # switch from ru to us or from us to ru
 
-    (from other terminal)
-    $ xkb-switch -s de # switch to 'de' layout, change secondary layout to 'de'
+(from other terminal)
+$ xkb-switch -s de # switch to 'de' layout, change secondary layout to 'de'
 
-    (back to terminal running xkb-group.sh)
-    switch # switch from de to us
-    switch # switch from us to de
+(back to terminal running xkb-group.sh)
+switch # switch from de to us
+switch # switch from us to de
 ```
 
 Bugs or Problems
