@@ -38,7 +38,7 @@ INSTALL(TARGETS xkb-switch ${xkblib}
     LIBRARY DESTINATION lib OPTIONAL
 )
 
-SET(MAN_COMPRESSION "xz" CACHE STRING "Manpages compression tool")
+SET(MAN_COMPRESSION "gz" CACHE STRING "Manpages compression tool")
 SET(MANDIR "${CMAKE_INSTALL_PREFIX}/share/man" CACHE STRING "Manpages installation path")
 
 # Function to compress and install man page
