@@ -62,7 +62,7 @@ function(install_man man_filename man_type)
         )
     # elsewise just copy
     else()
-        MESSAGE(WARNING "There is no compression tool for man pages (xz or gzip). Not compressed copy of man file will be used.")
+        MESSAGE(WARNING "There is no compression tool for man pages (gzip). Not compressed copy of man file will be used.")
         SET(compressed_man ${CMAKE_BINARY_DIR}/${man_filename}.${man_type})
         ADD_CUSTOM_COMMAND(OUTPUT ${compressed_man}
             COMMAND cp ${raw_man} ${CMAKE_BINARY_DIR}
