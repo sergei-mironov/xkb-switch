@@ -26,18 +26,19 @@ if ! which vim; then
 fi
 
 git status -vv
-$X --version
-$X --version 2>&1 | grep -q xkb-switch
-$X --help 2>&1 | grep -q 'xkb-switch -s ARG'
-test "$($X --help)"="$($X -h)"
-test "$($X --list)"="$($X -l)"
+setxkbmap -query
+"$X" --version
+"$X" --version 2>&1 | grep -q xkb-switch
+"$X" --help 2>&1 | grep -q 'xkb-switch -s ARG'
+test "$($X --help)" = "$($X -h)"
+test "$($X --list)" = "$($X -l)"
 for l in $($X --list) ; do
-  $X -s "$l"
-  test "$($X -p)"=="$l"
+  "$X" -s "$l"
+  test "$($X -p)" = "$l"
 done
-$X -n
-$X --next
-! test $X -s fooooo
+"$X" -n
+"$X" --next
+! test "$X" -s fooooo
 
 cat >/tmp/vimxkbswitch <<EOF
 let g:XkbSwitchLib = "$LIB"
