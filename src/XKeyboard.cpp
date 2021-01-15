@@ -26,8 +26,8 @@
 
 namespace kb {
 
-XKeyboard::XKeyboard()
-  : _display(0), _deviceId(XkbUseCoreKbd), _kbdDescPtr(0)
+XKeyboard::XKeyboard(size_t verbose)
+  : _display(0), _deviceId(XkbUseCoreKbd), _kbdDescPtr(0), _verbose(verbose)
 {
 }
 
@@ -48,16 +48,16 @@ void XKeyboard::open_display()
   free(displayName);
   switch (reasonReturn) {
     case XkbOD_Success:           break;
-    case XkbOD_BadLibraryVersion: THROW_MSG("Bad XKB library version.");
-    case XkbOD_ConnectionRefused: THROW_MSG("Connection to X server refused.");
-    case XkbOD_BadServerVersion:  THROW_MSG("Bad X11 server version.");
-    case XkbOD_NonXkbServer:      THROW_MSG("XKB not present.");
-    default:                      THROW_MSG("XKB refused to open the display with reason '" << reasonReturn << "'.");
+    case XkbOD_BadLibraryVersion: THROW_MSG(_verbose, "Bad XKB library version.");
+    case XkbOD_ConnectionRefused: THROW_MSG(_verbose, "Connection to X server refused.");
+    case XkbOD_BadServerVersion:  THROW_MSG(_verbose, "Bad X11 server version.");
+    case XkbOD_NonXkbServer:      THROW_MSG(_verbose, "XKB not present.");
+    default:                      THROW_MSG(_verbose, "XKB refused to open the display with reason '" << reasonReturn << "'.");
   }
 
   _kbdDescPtr = XkbAllocKeyboard();
   if (_kbdDescPtr == NULL) {
-    THROW_MSG("Failed to get keyboard description.");
+    THROW_MSG(_verbose, "Failed to get keyboard description.");
   }
 
   _kbdDescPtr->dpy = _display;
@@ -103,7 +103,7 @@ layout_variant_strings XKeyboard::get_layout_variant()
 
   bret = XkbRF_GetNamesProp(_display, &tmp, &vdr._it);
   free(tmp);  // return memory allocated by XkbRF_GetNamesProp
-  CHECK_MSG(bret==True, "Failed to get keyboard properties");
+  CHECK_MSG(_verbose, bret==True, "Failed to get keyboard properties");
 
   return make_pair(string(vdr._it.layout ? vdr._it.layout : "us"),
                    string(vdr._it.variant ? vdr._it.variant : ""));
@@ -140,21 +140,21 @@ void XKeyboard::build_layout(string_vector& out)
 
 void XKeyboard::wait_event()
 {
-  CHECK(_display != 0);
+  CHECK(_verbose, _display != 0);
 
   Bool bret = XkbSelectEventDetails(_display, XkbUseCoreKbd,
       XkbStateNotify, XkbAllStateComponentsMask, XkbGroupStateMask);
-  CHECK_MSG(bret==True, "XkbSelectEventDetails failed");
+  CHECK_MSG(_verbose, bret==True, "XkbSelectEventDetails failed");
 
   XEvent event;
   int iret = XNextEvent(_display, &event);
-  CHECK_MSG(iret==0, "XNextEvent failed with " << iret);
+  CHECK_MSG(_verbose, iret==0, "XNextEvent failed with " << iret);
 }
 
 void XKeyboard::set_group(int groupNum)
 {
   Bool result = XkbLockGroup(_display, _deviceId, groupNum);
-  CHECK(result == True);
+  CHECK(_verbose, result == True);
   XFlush(_display);
 }
 

@@ -44,8 +44,9 @@ public:
   Display* _display;
   int _deviceId;
   XkbDescRec* _kbdDescPtr;
+  size_t _verbose;
 
-  XKeyboard();
+  XKeyboard(size_t verbose);
   ~XKeyboard();
 
   // Opens display (or throw std::runtime_error)
