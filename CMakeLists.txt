@@ -38,7 +38,7 @@ INSTALL(TARGETS xkb-switch ${xkblib}
     LIBRARY DESTINATION lib OPTIONAL
 )
 
-SET(MAN_COMPRESSION "gz" CACHE STRING "Manpages compression tool")
+SET(MAN_COMPRESSION "gzip" CACHE STRING "Manpages compression tool")
 SET(MANDIR "${CMAKE_INSTALL_PREFIX}/share/man" CACHE STRING "Manpages installation path")
 
 # Function to compress and install man page
@@ -47,12 +47,7 @@ function(install_man man_filename man_type)
     # check what compression tool is available
     FIND_PROGRAM(COMPRESS_EXECUTABLE NAMES ${MAN_COMPRESSION})
     if(NOT COMPRESS_EXECUTABLE)
-        FIND_PROGRAM(COMPRESS_EXECUTABLE NAMES gzip)
-        if(COMPRESS_EXECUTABLE)
-            SET(MAN_COMPRESSION gz)
-        else()
-            SET(MAN_COMPRESSION NO)
-        endif()
+      SET(MAN_COMPRESSION NO)
     endif()
     # set input an output file names
     SET(raw_man man/${man_filename}.${man_type})
