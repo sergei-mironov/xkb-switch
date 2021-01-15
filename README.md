@@ -33,6 +33,14 @@ $ cmake ..
 $ make
 ```
 
+Optionally, test the basic functions by running `./test.sh` script. The script
+should print OK in the last line and return exit code of zero.
+
+```sh
+$ ../test.sh 2>&1 | tee test.log
+$ tail -n 1 test.log | grep OK || echo "Test failed!"
+```
+
 In order to install, use your system's package manager or default to the following:
 
 ```sh
