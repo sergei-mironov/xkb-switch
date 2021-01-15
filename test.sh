@@ -2,16 +2,16 @@
 
 set -e -x
 
-LIB=`dirname $0`/build/libxkbswitch.so
-X=`dirname $0`/build/xkb-switch
+LIB=./libxkbswitch.so
+X=./xkb-switch
 
 if ! test -f "$LIB" ; then
-  echo "$LIB not found. Try building it first" >&2
+  echo "$LIB not found. Did you run ./test.sh from the build directory?" >&2
   exit 1
 fi
 
 if ! test -f "$X" ; then
-  echo "$X not found. Try building it first" >&2
+  echo "$X not found. Did you run ./test.sh from the build directory?" >&2
   exit 1
 fi
 
@@ -25,7 +25,14 @@ if ! which vim; then
   exit 1
 fi
 
-git status -vv
+if test -z "$DISPLAY" ; then
+  echo "This test requires X-server connection" >&2
+  exit 1
+fi
+
+if which git; then
+  git status -vv
+fi
 setxkbmap -query
 "$X" --version
 "$X" --version 2>&1 | grep -q xkb-switch
