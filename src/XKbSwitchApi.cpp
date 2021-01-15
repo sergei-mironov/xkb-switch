@@ -10,7 +10,7 @@
  */
 
 #include <algorithm>
-#include "XKeyboard.h"
+#include "XKeyboard.hpp"
 
 using namespace std;
 using namespace kb;

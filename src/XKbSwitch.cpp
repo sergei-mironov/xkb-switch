@@ -23,8 +23,8 @@
 #include <algorithm>
 #include <sstream>
 
-#include "XKeyboard.h"
-#include "XKbSwitch.hpp"
+#include "XKeyboard.hpp"
+#include "Utils.hpp"
 
 using namespace std;
 using namespace kb;

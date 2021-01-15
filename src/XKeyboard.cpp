@@ -21,8 +21,10 @@
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKBrules.h>
 
-#include "XKeyboard.h"
-#include "XKbSwitch.hpp"
+#include "XKeyboard.hpp"
+#include "Utils.hpp"
+
+using namespace std;
 
 namespace kb {
 

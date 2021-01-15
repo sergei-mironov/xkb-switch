@@ -18,8 +18,8 @@
  * along with Xkb-switch. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XKEYBOARD_H
-#define XKEYBOARD_H
+#ifndef XKEYBOARD_HPP
+#define XKEYBOARD_HPP
 
 #include <vector>
 #include <string>
@@ -29,8 +29,6 @@
 #include <X11/XKBlib.h>
 #include <map>
 #include <string>
-
-using std::string;
 
 namespace kb {
 
