@@ -22,6 +22,7 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
+#include <getopt.h>
 
 #include "XKeyboard.hpp"
 #include "Utils.hpp"
@@ -71,48 +72,64 @@ int main( int argc, char* argv[] )
     int m_print = 0;
     int m_next = 0;
     int m_list = 0;
+    int opt;
+    int option_index = 0;
+    int i=1;
     string newgrp;
 
-    for(int i=1; i<argc; i) {
-      string arg(argv[i++]);
-      if(arg == "-s") {
-        CHECK_MSG(verbose, i<argc, "Argument expected");
-        newgrp=argv[i++];
+    static struct option long_options[] ={
+            {"s", required_argument, NULL, 's'},
+            {"list", no_argument, NULL, 'l'},
+            {"version", no_argument, NULL, 'v'},
+            {"wait", no_argument, NULL, 'w'},
+            {"longwait", no_argument, NULL, 'W'},
+            {"print", no_argument, NULL, 'p'},
+            {"next", no_argument, NULL, 'n'},
+            {"help", no_argument, NULL, 'h'},
+            {"debug", no_argument, NULL, 'd'},
+            {NULL, 0, NULL, 0},
+    };
+    while (((opt = getopt_long(argc, argv, "s:lvwWpnhd", long_options, &option_index)) != -1)&&i++)
+    {
+      switch (opt)
+      {
+      case 's':
+        CHECK_MSG(verbose, i < argc, "Argument expected");
+        newgrp = argv[i++];
         m_cnt++;
-      }
-      else if(arg == "-l" || arg == "--list") {
+        break;
+      case 'l':
         m_list = 1;
         m_cnt++;
-      }
-      else if(arg == "-v" || arg=="--version") {
+        break;
+      case 'v':
         cerr << "xkb-switch " << XKBSWITCH_VERSION << endl;
         return 0;
-      }
-      else if(arg == "-w" || arg == "--wait") {
+      case 'w':
         m_wait = 1;
         m_cnt++;
-      }
-      else if(arg == "-W" || arg == "--longwait") {
+        break;
+      case 'W':
         m_lwait = 1;
         m_cnt++;
-      }
-      else if(arg == "-p" || arg == "--print") {
+        break;
+      case 'p':
         m_print = 1;
         m_cnt++;
-      }
-      else if(arg == "-n" || arg == "--next") {
+        break;
+      case 'n':
         m_next = 1;
         m_cnt++;
-      }
-      else if(arg == "-h" || arg == "--help") {
+        break;
+      case 'h':
         usage();
         return 1;
-      }
-      else if(arg == "-d" || arg == "--debug") {
+      case 'd':
         verbose++;
-      }
-      else {
-        THROW_MSG(verbose, "Invalid argument: '" << arg << "'. Check --help.");
+        break;
+      default:
+        THROW_MSG(verbose, "Invalid argument: '" << opt << "'. Check --help.");
+        break;
       }
     }
 
