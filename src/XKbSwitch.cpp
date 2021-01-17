@@ -104,7 +104,7 @@ int main( int argc, char* argv[] )
         break;
       case 'v':
         cerr << "xkb-switch " << XKBSWITCH_VERSION << endl;
-        return 0;
+        break;
       case 'w':
         m_wait = 1;
         m_cnt++;
@@ -123,7 +123,7 @@ int main( int argc, char* argv[] )
         break;
       case 'h':
         usage();
-        return 1;
+        break;
       case 'd':
         verbose++;
         break;
