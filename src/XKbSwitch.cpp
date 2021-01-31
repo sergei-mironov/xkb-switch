@@ -64,7 +64,6 @@ int main( int argc, char* argv[] )
   string_vector syms;
   bool syms_collected = false;
 
-	using namespace std;
   try {
     int m_cnt = 0;
     int m_wait = 0;
@@ -77,7 +76,7 @@ int main( int argc, char* argv[] )
     int i=1;
     string newgrp;
 
-    static struct option long_options[] ={
+    static struct option long_options[] = {
             {"s", required_argument, NULL, 's'},
             {"list", no_argument, NULL, 'l'},
             {"version", no_argument, NULL, 'v'},
@@ -89,10 +88,9 @@ int main( int argc, char* argv[] )
             {"debug", no_argument, NULL, 'd'},
             {NULL, 0, NULL, 0},
     };
-    while (((opt = getopt_long(argc, argv, "s:lvwWpnhd", long_options, &option_index)) != -1)&&i++)
-    {
-      switch (opt)
-      {
+    while (((opt = getopt_long(argc, argv, "s:lvwWpnhd",
+                               long_options, &option_index))!=-1) && i++) {
+      switch (opt) {
       case 's':
         CHECK_MSG(verbose, i < argc, "Argument expected");
         newgrp = argv[i++];
