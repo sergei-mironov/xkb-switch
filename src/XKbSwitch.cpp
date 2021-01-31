@@ -77,7 +77,7 @@ int main( int argc, char* argv[] )
     string newgrp;
 
     static struct option long_options[] = {
-            {"s", required_argument, NULL, 's'},
+            {"set", required_argument, NULL, 's'},
             {"list", no_argument, NULL, 'l'},
             {"version", no_argument, NULL, 'v'},
             {"wait", no_argument, NULL, 'w'},
