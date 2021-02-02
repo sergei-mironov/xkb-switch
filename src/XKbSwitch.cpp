@@ -71,7 +71,7 @@ int main( int argc, char* argv[] )
     int m_print = 0;
     int m_next = 0;
     int m_list = 0;
-    char opt;
+    int opt;
     int option_index = 0;
     string newgrp;
 
@@ -126,10 +126,10 @@ int main( int argc, char* argv[] )
         verbose++;
         break;
       case '?':
-        THROW_MSG(verbose, "Invalid argument. Check --help.");
+        THROW_MSG(verbose, "Invalid arguments. Check --help.");
         break;
       default:
-        THROW_MSG(verbose, "Invalid argument: '" << opt << "'. Check --help.");
+        THROW_MSG(verbose, "Invalid argument: '" << (char)opt << "'. Check --help.");
         break;
       }
     }
