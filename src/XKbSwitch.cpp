@@ -73,8 +73,8 @@ int main( int argc, char* argv[] )
     int m_list = 0;
     int opt;
     int option_index = 0;
-    int i=1;
     string newgrp;
+    string tempoptarg;
 
     static struct option long_options[] = {
             {"set", required_argument, NULL, 's'},
@@ -88,12 +88,14 @@ int main( int argc, char* argv[] )
             {"debug", no_argument, NULL, 'd'},
             {NULL, 0, NULL, 0},
     };
-    while (((opt = getopt_long(argc, argv, "s:lvwWpnhd",
-                               long_options, &option_index))!=-1) && i++) {
+    while ((opt = getopt_long(argc, argv, "s:lvwWpnhd",
+                               long_options, &option_index))!=-1) {
       switch (opt) {
       case 's':
-        CHECK_MSG(verbose, i < argc, "Argument expected");
-        newgrp = argv[i++];
+        tempoptarg=optarg;
+        if (!optarg || tempoptarg.empty())
+          CHECK_MSG(verbose, 0, "Argument expected");
+        newgrp=optarg;
         m_cnt++;
         break;
       case 'l':
