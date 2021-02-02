@@ -41,6 +41,8 @@ test "$($X --help)" = "$($X -h)"
 test "$($X --list)" = "$($X -l)"
 for l in $($X --list) ; do
   "$X" -s "$l"
+  "$X" -ds "$l"
+  "$X" --set="$l"
   test "$($X -p)" = "$l"
 done
 "$X" -n

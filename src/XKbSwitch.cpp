@@ -71,10 +71,9 @@ int main( int argc, char* argv[] )
     int m_print = 0;
     int m_next = 0;
     int m_list = 0;
-    int opt;
+    char opt;
     int option_index = 0;
     string newgrp;
-    string tempoptarg;
 
     static struct option long_options[] = {
             {"set", required_argument, NULL, 's'},
@@ -89,11 +88,10 @@ int main( int argc, char* argv[] )
             {NULL, 0, NULL, 0},
     };
     while ((opt = getopt_long(argc, argv, "s:lvwWpnhd",
-                               long_options, &option_index))!=-1) {
+                              long_options, &option_index))!=-1) {
       switch (opt) {
       case 's':
-        tempoptarg=optarg;
-        if (!optarg || tempoptarg.empty())
+        if (!optarg || string(optarg).empty())
           CHECK_MSG(verbose, 0, "Argument expected");
         newgrp=optarg;
         m_cnt++;
@@ -126,6 +124,9 @@ int main( int argc, char* argv[] )
         break;
       case 'd':
         verbose++;
+        break;
+      case '?':
+        THROW_MSG(verbose, "Invalid argument. Check --help.");
         break;
       default:
         THROW_MSG(verbose, "Invalid argument: '" << opt << "'. Check --help.");
