@@ -51,7 +51,7 @@ function(install_man man_filename man_type)
     endif()
     # set input an output file names
     SET(raw_man man/${man_filename}.${man_type})
-    SET(compressed_man ${CMAKE_BINARY_DIR}/${man_filename}.${man_type}.${MAN_COMPRESSION})
+    SET(compressed_man ${CMAKE_BINARY_DIR}/${man_filename}.${man_type}.gz)
     # compress if there is the compression tool
     if(MAN_COMPRESSION)
         ADD_CUSTOM_COMMAND(OUTPUT ${compressed_man}
