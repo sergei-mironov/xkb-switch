@@ -107,6 +107,9 @@ layout_variant_strings XKeyboard::get_layout_variant()
   free(tmp);  // return memory allocated by XkbRF_GetNamesProp
   CHECK_MSG(_verbose, bret==True, "Failed to get keyboard properties");
 
+  MSG(_verbose, "raw layout string \"" << vdr._it.layout << "\"");
+  MSG(_verbose, "raw variant string \"" << vdr._it.variant << "\"");
+
   return make_pair(string(vdr._it.layout ? vdr._it.layout : "us"),
                    string(vdr._it.variant ? vdr._it.variant : ""));
 }
@@ -121,14 +124,20 @@ void XKeyboard::build_layout_from(string_vector& out, const layout_variant_strin
 
     getline(layout, l, ',');
     getline(variant, v, ',');
-    if(!layout && !variant)
+    MSG(_verbose, "layout \"" << l << "\", variant \"" << v << "\"");
+    if(!layout && !variant) {
       break;
+    }
 
     if(v!="") {
       v = "(" + v + ")";
     }
     if(l!="") {
+      MSG(_verbose, "... accepting with id #" << out.size());
       out.push_back(l+v);
+    }
+    else {
+      MSG(_verbose, "... ignoring");
     }
   }
 }

@@ -23,6 +23,14 @@
 
 #include <exception>
 #include <stdexcept>
+#include <iostream>
+
+#define MSG(verbose, msg) do { \
+  if (verbose >= 2) { \
+    std::cerr << __FILE__ << ":" << __LINE__ << ": "; \
+    std::cerr << msg << std::endl; \
+  } \
+} while(0)
 
 #define THROW_MSG(verbose, msg) do { \
   std::ostringstream oss; \
