@@ -38,7 +38,7 @@ namespace
 
                 try
                 {
-                    xkb = new XKeyboard((size_t)(-1));
+                    xkb = new XKeyboard(0);
                     xkb->open_display();
                 }
                 catch( ... )
