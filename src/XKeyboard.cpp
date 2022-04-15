@@ -119,6 +119,8 @@ void XKeyboard::build_layout_from(string_vector& out, const layout_variant_strin
   std::istringstream layout(lv.first);
   std::istringstream variant(lv.second);
 
+  out.clear();
+
   while(true) {
     string l,v;
 
