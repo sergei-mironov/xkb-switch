@@ -108,7 +108,10 @@ layout_variant_strings XKeyboard::get_layout_variant()
   CHECK_MSG(_verbose, bret==True, "Failed to get keyboard properties");
 
   MSG(_verbose, "raw layout string \"" << vdr._it.layout << "\"");
-  MSG(_verbose, "raw variant string \"" << vdr._it.variant << "\"");
+  if(vdr._it.variant)
+    MSG(_verbose, "raw variant string \"" << vdr._it.variant << "\"");
+  else
+    MSG(_verbose, "No raw variant string");
 
   return make_pair(string(vdr._it.layout ? vdr._it.layout : "us"),
                    string(vdr._it.variant ? vdr._it.variant : ""));
