@@ -51,20 +51,24 @@ function(install_man man_filename man_type)
     endif()
     # set input an output file names
     SET(raw_man man/${man_filename}.${man_type})
-    SET(compressed_man ${CMAKE_BINARY_DIR}/${man_filename}.${man_type}.${MAN_COMPRESSION})
     # compress if there is the compression tool
     if(MAN_COMPRESSION)
-        ADD_CUSTOM_COMMAND(OUTPUT ${compressed_man}
-            COMMAND cat ${raw_man} | ${COMPRESS_EXECUTABLE} > ${compressed_man}
+      if(COMPRESS_EXECUTABLE MATCHES "gzip")
+          SET(installed_man ${CMAKE_BINARY_DIR}/${man_filename}.${man_type}.gz)
+        else()
+          SET(installed_man ${CMAKE_BINARY_DIR}/${man_filename}.${man_type}.${MAN_COMPRESSION})
+        endif()
+        ADD_CUSTOM_COMMAND(OUTPUT ${installed_man}
+            COMMAND cat ${raw_man} | ${COMPRESS_EXECUTABLE} > ${installed_man}
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             DEPENDS ${raw_man}
-            COMMENT "Compressing man file ${raw_man} to ${compressed_man}"
+            COMMENT "Compressing man file ${raw_man} to ${installed_man}"
         )
     # elsewise just copy
     else()
-        MESSAGE(WARNING "There is no compression tool for man pages (gzip). Not compressed copy of man file will be used.")
-        SET(compressed_man ${CMAKE_BINARY_DIR}/${man_filename}.${man_type})
-        ADD_CUSTOM_COMMAND(OUTPUT ${compressed_man}
+        SET(installed_man ${CMAKE_BINARY_DIR}/${man_filename}.${man_type})
+        MESSAGE(WARNING "There is no compression tool for man pages. Not compressed copy of man file will be used.")
+        ADD_CUSTOM_COMMAND(OUTPUT ${installed_man}
             COMMAND cp ${raw_man} ${CMAKE_BINARY_DIR}
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             DEPENDS ${raw_man}
@@ -72,8 +76,8 @@ function(install_man man_filename man_type)
         )
     endif()
     # add actions
-    ADD_CUSTOM_TARGET(man_${man_filename}_${man_type} ALL DEPENDS ${compressed_man})
-    INSTALL(FILES ${compressed_man}
+    ADD_CUSTOM_TARGET(man_${man_filename}_${man_type} ALL DEPENDS ${installed_man})
+    INSTALL(FILES ${installed_man}
         DESTINATION ${MANDIR}/man${man_type}
     )
 endfunction()

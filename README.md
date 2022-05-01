@@ -41,10 +41,12 @@ $ ../test.sh 2>&1 | tee test.log
 $ tail -n 1 test.log | grep OK || echo "Test failed!"
 ```
 
-In order to install, use your system's package manager or default to the following:
+In order to do a system-wide install, use your system's package manager or
+default to the following:
 
 ```sh
-$ sudo make install
+$ sudo make install                    # System-wide installation
+$ make DESTDIR=$HOME/.local install    # User installation
 ```
 
 On some distributions, you may need to update the program cache if it's the
