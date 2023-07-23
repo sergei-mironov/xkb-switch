@@ -2,6 +2,7 @@
  * Implementation of a class to get keyboard layout information and change layouts
  *
  * Copyright (C) 2008 by Jay Bromley <jbromley@gmail.com>
+ * Copyright (C) 2010-2023 by Sergei Mironov
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free

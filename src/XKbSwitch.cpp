@@ -1,7 +1,7 @@
 /*
  * Plain launcher program for Jay Bromley's Xkeyboard library.
  *
- * Copyright (C) 2010 by Sergey Mironov <ierton@gmail.com>
+ * Copyright (C) 2010-2023 by Sergei Mironov
  *
  * This file is part of Xkb-switch.
  * Xkb-switch is free software: you can redistribute it and/or modify

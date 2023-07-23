@@ -2,6 +2,7 @@
  * C++ exceptions that wraps X11 errors.
  *
  * Copyright (C) 2008 by Jay Bromley <jbromley@gmail.com>
+ * Copyright (C) 2010-2023 by Sergei Mironov
  *
  * This file is part of Xkb-switch.
  * Xkb-switch is free software: you can redistribute it and/or modify

@@ -1,10 +1,11 @@
 
 XKB-SWITCH
-===========
-by J. Bromley, S. Mironov, Alexei Rad'kov
+==========
+
+by Jay Bromley, Sergei Mironov, Alexei Rad'kov
 
 xkb-switch is a C++ program that allows to query and change the XKB layout state.
-Originally ruby-based code written by J.Broomley.
+Originally ruby-based code written by Jay Bromley.
 
 * XKeyboard.cpp  Implementation for XKB query/set class
 * XKbSwitch.cpp  Main program
@@ -13,7 +14,20 @@ Originally ruby-based code written by J.Broomley.
 The C++ class has no special dependencies on anything outside of
 X-related libraries, so it can be easily used with other software.
 
-Xkb-switch is licensed under the GNU GPLv3, see COPYING for details.
+Older versions of Xkb-switch were licensed under the GNU GPLv3, the current
+version is licensed under the MIT license. See COPYING for details.
+
+
+<!-- vim-markdown-toc GFM -->
+
+* [Installing](#installing)
+* [Usage](#usage)
+* [VIM integration](#vim-integration)
+* [Layout groups](#layout-groups)
+* [Bugs or Problems](#bugs-or-problems)
+* [Licensing notice](#licensing-notice)
+
+<!-- vim-markdown-toc -->
 
 Installing
 ----------
@@ -126,6 +140,15 @@ References:
 * <https://0x64616c.livejournal.com/914.html>
   - Old LJ post by Mitya describing minimalistic X11 kb test application
 
-Regards,
-Sergey.
+Licensing notice
+----------------
 
+In response to the [request](https://github.com/grwlf/xkb-switch/issues/69) I
+decided to re-license the project under the more permissive MIT license. Older
+versions of the software remain under the GPL license we used previously. This
+[StackExchange
+question](https://softwareengineering.stackexchange.com/questions/105912/can-you-change-code-distributed-under-the-mit-license-and-re-distribute-it-unde)
+includes some information regarding this kind of situations.
+I included the top-3 contributors into the MIT license text. Please contact me
+either directly or via the mentioned Github issue if you have any questions or
+suggestions regarding this decision.
