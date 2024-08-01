@@ -43,7 +43,7 @@ jobs:
       id: package
       run: |
         cd build
-        cpack -G DEB
+        cmake --build . --target create_deb
         DEB_FILE=$(ls *.deb)
         VERSION=$(echo $DEB_FILE | grep -oP '\d+\.\d+\.\d+')
         echo "DEB_FILE=${DEB_FILE}" >> "$GITHUB_OUTPUT"

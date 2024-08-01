@@ -98,3 +98,11 @@ SET(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 
 # Include CPack
 include(CPack)
+
+# Custom target to run CPack
+ADD_CUSTOM_TARGET(create_deb
+    COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_BINARY_DIR} cpack -G DEB
+    DEPENDS xkb-switch
+    COMMENT "Packaging the project to .deb with CPack"
+)
+
