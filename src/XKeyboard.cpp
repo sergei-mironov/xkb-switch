@@ -196,6 +196,37 @@ int XKeyboard::get_group() const
   return static_cast<int>(xkbState.group);
 }
 
+std::string XKeyboard::get_long_group_name() const
+{
+  if (_display == nullptr) {
+    throw std::runtime_error("Display not opened.");
+  }
+
+  XkbStateRec xkbState;
+
+  if (XkbGetState(_display, _deviceId, &xkbState) != Success) {
+    throw std::runtime_error("Failed to get keyboard state.");
+  }
+
+  XkbDescPtr desc = XkbGetKeyboard(_display, XkbAllComponentsMask, _deviceId);
+  if (desc == nullptr) {
+    throw std::runtime_error("Failed to get keyboard description.");
+  }
+
+  char* groupName = XGetAtomName(_display, desc->names->groups[xkbState.group]);
+  if (groupName == nullptr) {
+    XkbFreeKeyboard(desc, 0, True);
+    throw std::runtime_error("Failed to get group name.");
+  }
+
+  std::string longGroupName = groupName;
+
+  XFree(groupName);
+  XkbFreeKeyboard(desc, 0, True);
+
+  return longGroupName;
+}
+
 // returns true if symbol is ok
 bool filter(const string_vector& nonsyms, const std::string& symbol)
 {

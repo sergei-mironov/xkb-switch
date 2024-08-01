@@ -47,6 +47,7 @@ void usage()
   cerr << "       xkb-switch -n|--next         Switch to the next layout group" << endl;
   cerr << "       xkb-switch -d|--debug        Print debug information" << endl;
   cerr << "       xkb-switch [-p]              Displays current layout group" << endl;
+  cerr << "       xkb-switch -f|--fancy        Displays fancy name of current layout group" << endl;
 }
 
 string print_layouts(const string_vector& sv)
@@ -77,6 +78,7 @@ int main( int argc, char* argv[] )
     int m_print = 0;
     int m_next = 0;
     int m_list = 0;
+    int m_fancy = 0;
     int opt;
     int option_index = 0;
     string newgrp;
@@ -91,9 +93,10 @@ int main( int argc, char* argv[] )
             {"next", no_argument, NULL, 'n'},
             {"help", no_argument, NULL, 'h'},
             {"debug", no_argument, NULL, 'd'},
+            {"fancy", no_argument, NULL, 'f'},
             {NULL, 0, NULL, 0},
     };
-    while ((opt = getopt_long(argc, argv, "s:lvwWpnhd",
+    while ((opt = getopt_long(argc, argv, "s:lvwWpnhdf",
                               long_options, &option_index))!=-1) {
       switch (opt) {
       case 's':
@@ -130,6 +133,9 @@ int main( int argc, char* argv[] )
         break;
       case 'd':
         verbose++;
+        break;
+      case 'f':
+        m_fancy++;
         break;
       case '?':
         THROW_MSG(verbose, "Invalid arguments. Check --help.");
@@ -191,7 +197,12 @@ int main( int argc, char* argv[] )
     }
 
     if(m_print) {
+      if (!m_fancy) {
       cout << syms.at(xkb.get_group()) << endl;
+      } 
+      else {
+      cout << xkb.get_long_group_name() << endl;
+      }
     }
 
     if(m_list) {
