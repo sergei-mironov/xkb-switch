@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2023 by Sergei Mironov
+ * Copyright (C) 2010-2024 by Sergei Mironov
  *
  * This file is part of Xkb-switch.
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -50,7 +50,7 @@ void usage()
   cerr << "       xkb-switch -f|--fancy        Displays fancy name of current layout group" << endl;
 }
 
-string print_layouts(const string_vector& sv)
+string get_all_layouts(const string_vector& sv)
 {
   ostringstream oss;
   bool fst = true;
@@ -63,6 +63,16 @@ string print_layouts(const string_vector& sv)
   }
   oss << "]";
   return oss.str();
+}
+
+std::string get_layout_group_name(const XKeyboard &xkb, const string_vector &syms, int fancy)
+{
+  if (!fancy) {
+    return syms.at(xkb.get_group());
+  }
+  else {
+    return xkb.get_long_group_name();
+  }
 }
 
 int main( int argc, char* argv[] )
@@ -170,7 +180,7 @@ int main( int argc, char* argv[] )
         xkb.wait_event();
         xkb.build_layout(syms);
         syms_collected = true;
-        cout << syms.at(xkb.get_group()) << endl;
+        cout << get_layout_group_name(xkb, syms, m_fancy) << endl;
       }
     }
 
@@ -197,12 +207,7 @@ int main( int argc, char* argv[] )
     }
 
     if(m_print) {
-      if (!m_fancy) {
-      cout << syms.at(xkb.get_group()) << endl;
-      } 
-      else {
-      cout << xkb.get_long_group_name() << endl;
-      }
+      cout << get_layout_group_name(xkb, syms, m_fancy) << endl;
     }
 
     if(m_list) {
@@ -219,7 +224,7 @@ int main( int argc, char* argv[] )
     cerr << err.what() << endl;
     if (verbose >= 2) {
       if (syms_collected) {
-        cerr << "xkb-switch: layouts: " << print_layouts(syms) << endl;
+        cerr << "xkb-switch: layouts: " << get_all_layouts(syms) << endl;
       }
     }
     return 2;

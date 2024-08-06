@@ -222,7 +222,8 @@ int XKeyboard::get_group() const
   return static_cast<int>(xkbState.group);
 }
 
-std::string XKeyboard::get_long_group_name() const {
+std::string XKeyboard::get_long_group_name() const
+{
   if (_display == nullptr) {
     throw std::runtime_error("Display not opened.");
   }
