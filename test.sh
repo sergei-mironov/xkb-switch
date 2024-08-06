@@ -30,6 +30,16 @@ if test -z "$DISPLAY" ; then
   exit 1
 fi
 
+not() {(
+  set +e
+  $@
+  if test "$?" = "0" ; then
+    exit 1
+  else
+    exit 0
+  fi
+)}
+
 if which git; then
   git status -vv
 fi
@@ -40,14 +50,16 @@ setxkbmap -query
 test "$($X --help)" = "$($X -h)"
 test "$($X --list)" = "$($X -l)"
 for l in $($X --list) ; do
-  "$X" -s "$l"
-  "$X" -ds "$l"
-  "$X" --set="$l"
-  test "$($X -p)" = "$l"
+  "$X" -s "$l"    # Set the layout
+  "$X" -ds "$l"   # Set the layout with debug info
+  "$X" --set="$l" # Set the layout using long form
+  test "$($X -p)" = "$l"  # Make sure the layout is set
 done
 "$X" -n
 "$X" --next
-! test "$X" -s fooooo
+not "$X" -s fooo  # Sets non-zero error code
+$X --fancy        # Fancy name
+test "$($X --fancy)" != "$($X -p)"
 
 cat >/tmp/vimxkbswitch <<EOF
 let g:XkbSwitchLib = "$LIB"
