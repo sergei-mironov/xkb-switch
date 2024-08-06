@@ -84,6 +84,7 @@ Usage: xkb-switch -s ARG            Sets current layout group to ARG
        xkb-switch -W                Infinitely waits for group change
        xkb-switch -n|--next         Switch to the next layout group
        xkb-switch [-p]              Displays current layout group
+       xkb-switch -f|--fancy        Displays fancy name of current layout group
 ```
 
 *A note on `xkb-switch -x`*

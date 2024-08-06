@@ -1,0 +1,92 @@
+name: Build and Package
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      deb_file: ${{ steps.package.outputs.deb_file }}
+      version: ${{ steps.package.outputs.version }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up CMake
+      uses: jwlawson/actions-setup-cmake@v2.0.2
+      with:
+        cmake-version: '3.23'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libx11-dev libxkbfile-dev dpkg-dev fakeroot
+
+    - name: Verify CMake version
+      run: cmake --version
+
+    - name: Build project
+      run: |
+        mkdir -p build
+        cd build
+        cmake ..
+        make
+
+    - name: Package project
+      id: package
+      run: |
+        cd build
+        cmake --build . --target create_deb
+        DEB_FILE=$(ls *.deb)
+        VERSION=$(echo $DEB_FILE | grep -oP '\d+\.\d+\.\d+')
+        echo "DEB_FILE=${DEB_FILE}" >> "$GITHUB_OUTPUT"
+        echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
+
+    - name: Upload .deb package as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: xkb-switch-deb
+        path: build/*.deb
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    - name: Download .deb package
+      uses: actions/download-artifact@v4
+      with:
+        name: xkb-switch-deb
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION: ${{ needs.build.outputs.version }}
+      with:
+        tag_name: "v${{ env.VERSION }}.${{ github.run_number }}"  # Example of using a pseudo semantic versioning
+        release_name: "Version ${{ env.VERSION }}, pipeline run ${{ github.run_number }}"
+        draft: true  # Ensure the release is published
+        prerelease: false  # Change to false if you do not want it as a prerelease
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEB_FILE: ${{ needs.build.outputs.deb_file }}
+        VERSION: ${{ needs.build.outputs.version }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ env.DEB_FILE }}
+        asset_name: xkb-switch-${{ env.VERSION }}.${{ github.run_number }}.deb
+        asset_content_type: application/octet-stream
+
