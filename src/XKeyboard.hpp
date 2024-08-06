@@ -69,6 +69,9 @@ public:
   void build_layout_from(string_vector& vec, const layout_variant_strings& lv);
   void build_layout(string_vector& vec);
 
+  // Returns fancy layout name as a string
+  std::string get_long_group_name() const;
+
   // Waits for kb event
   void wait_event();
 };

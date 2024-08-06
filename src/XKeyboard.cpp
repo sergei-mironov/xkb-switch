@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 by Jay Bromley <jbromley@gmail.com>
- * Copyright (C) 2010-2023 by Sergei Mironov
+ * Copyright (C) 2010-2024 by Sergei Mironov
  *
  * This file is part of Xkb-switch.
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -112,6 +112,32 @@ struct XkbRF_VarDefsRec_wrapper {
   }
 };
 
+struct XkbKeyboardWrapper {
+  XkbDescPtr ptr;
+  XkbKeyboardWrapper(XkbDescPtr p) : ptr(p) {}
+  ~XkbKeyboardWrapper() {
+    if (ptr) {
+
+      XkbFreeKeyboard(ptr, 0, True);
+    }
+  }
+  // Disable copying
+  XkbKeyboardWrapper(const XkbKeyboardWrapper&) = delete;
+  XkbKeyboardWrapper& operator=(const XkbKeyboardWrapper&) = delete;
+};
+
+struct XGetAtomNameWrapper {
+  Display* display;
+  char* ptr;
+  XGetAtomNameWrapper(Display* d, Atom atom) 
+    : display(d), ptr(XGetAtomName(d, atom)) {}
+  ~XGetAtomNameWrapper() {
+    if (ptr) {
+      XFree(ptr);
+    }
+  }
+};
+
 layout_variant_strings XKeyboard::get_layout_variant()
 {
   XkbRF_VarDefsRec_wrapper vdr;
@@ -195,6 +221,50 @@ int XKeyboard::get_group() const
   XkbGetState(_display, _deviceId, &xkbState);
   return static_cast<int>(xkbState.group);
 }
+
+std::string XKeyboard::get_long_group_name() const {
+  if (_display == nullptr) {
+    throw std::runtime_error("Display not opened.");
+  }
+
+  XkbStateRec xkbState;
+
+  if (XkbGetState(_display, _deviceId, &xkbState) != Success) {
+    throw std::runtime_error("Failed to get keyboard state.");
+  }
+
+  XkbDescPtr descPtr = XkbGetKeyboard(_display, XkbAllComponentsMask, _deviceId);
+  if (descPtr == nullptr) {
+    throw std::runtime_error("Failed to get keyboard description.");
+  }
+
+  XkbKeyboardWrapper desc(descPtr);
+
+  if (desc.ptr->names == nullptr) {
+    throw std::runtime_error("Failed to get keyboard names.");
+  }
+
+  Status ErrorGetControls = XkbGetControls(_display, XkbAllComponentsMask, desc.ptr);
+  if (ErrorGetControls != Success || desc.ptr->ctrls == nullptr) {
+    throw std::runtime_error("Failed to get keyboard controls.");
+  }
+
+  int num_groups = desc.ptr->ctrls->num_groups;
+  if (xkbState.group >= num_groups) {
+    throw std::runtime_error("Group index out of range.");
+  }
+
+  XGetAtomNameWrapper groupName(_display, desc.ptr->names->groups[xkbState.group]);
+  if (groupName.ptr == nullptr) {
+    throw std::runtime_error("Failed to get group name.");
+  }
+
+  std::string longGroupName = groupName.ptr;
+
+  return longGroupName;
+}
+
+
 
 // returns true if symbol is ok
 bool filter(const string_vector& nonsyms, const std::string& symbol)
